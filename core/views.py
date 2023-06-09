@@ -1,4 +1,5 @@
-from django.shortcuts import render,HttpResponse, redirect
+from django.shortcuts import render
+
 from store.models import Product
 
 def frontpage(request):
@@ -6,7 +7,3 @@ def frontpage(request):
     return render(request,'core/frontpage.html', {
         'products': products
     })
-
-    
-
-
