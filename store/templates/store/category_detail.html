@@ -10,11 +10,11 @@
             
             {% if product.image %}
             <div class="image mb-2">
-                <img src= "{{ product.image.url }}"alt="Image of {{ product.title }}">
+                <a href="{% url 'product_detail' product.category.slug product.slug %}"><img src= "{{ product.image.url }}"alt="Image of {{ product.title }}"></a>
 
             </div>
             {% endif %}
-          <h2 class="text-xl"> {{ product.title }} </h2>
+          <h2 class="text-xl"><a href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.title }}</a></h2>
           <p class="text-s text-gray-600">Rs.{{ product.price }}</p>
           <hr class="mt-2 mb-2">
           
