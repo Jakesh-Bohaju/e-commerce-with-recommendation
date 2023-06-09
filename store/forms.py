@@ -6,7 +6,7 @@ class  OrderForm(forms.ModelForm):
         model = Order
         fields = ('first_name', 'last_name', 'address', 'zipcode', 'city',)
         widgets = {
-            'first_name' : forms.Select(attrs={
+            'first_name' : forms.TextInput(attrs={
                 'class' : 'w-full px-4 py-2 border border-gray-200'
             }),
             'last_name' : forms.TextInput(attrs={

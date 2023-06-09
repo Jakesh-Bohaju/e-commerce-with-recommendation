@@ -7,7 +7,7 @@
 
 <h2 class="text-xl text-green-800 ">Total Cost: Rs.{{cart.get_total_cost }}</h2>
 
-<form method="post" action="." class="space-y-5">
+<form method="post" action="{% url 'checkout' %}" class="space-y-5">
     {% csrf_token %}
 
     {{ form.as_p }}

@@ -123,7 +123,7 @@ def checkout(request):
                 item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity)
             cart.clear()
 
-        return redirect('seller')
+        return redirect('frontpage')
     else:
         form = OrderForm()
 
