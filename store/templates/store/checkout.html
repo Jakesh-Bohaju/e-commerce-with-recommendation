@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Checkout{% endblock %} 
+
+{% block content %}
+<h1 class="mb-6 text-2xl mt-6 text-center bg-green-800 text-white rounded-xl">Checkout</h1>
+
+<h2 class="text-xl text-green-800 ">Total Cost: Rs.{{cart.get_total_cost }}</h2>
+
+<form method="post" action="." class="space-y-5">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+<button class="mt-4 inline-block px-4 py-2 bg-green-800 rounded-xl text-white">Checkout</button></a>
+</form>
+{% endblock %}
