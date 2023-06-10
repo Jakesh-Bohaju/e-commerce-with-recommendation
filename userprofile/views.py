@@ -96,13 +96,17 @@ def seller(request):
 
 def seller_order_detail(request,pk):
     order = get_object_or_404(Order, pk=pk)
+    orderitem = OrderItem.objects.get(order_id=order.id)
+    print(orderitem.quantity)
+    print(orderitem.product.title)
+    print(orderitem.price)
 
     return render(request, 'userprofile/seller_order_detail.html',{
-        'order': order,
+        'orderitem': orderitem,
     })
 
 
-def add_product(request, id=None):
+def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
 
