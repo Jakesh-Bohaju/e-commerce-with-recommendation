@@ -85,6 +85,8 @@ def vendor_detail(request, pk):
 def seller(request):
     products = request.user.products.exclude(status=Product.DELETED)
     order_items = OrderItem.objects.filter(product__user=request.user)
+    for i in order_items:
+        print(i)
     return render(request, 'userprofile/seller.html',{
         'products': products,
         'order_items': order_items,
@@ -98,7 +100,7 @@ def seller_order_detail(request,pk):
     })
 
 
-def add_product(request):
+def add_product(request, id=None):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
 
