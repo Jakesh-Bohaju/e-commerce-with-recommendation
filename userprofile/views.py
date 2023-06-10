@@ -84,7 +84,9 @@ def vendor_detail(request, pk):
     
 def seller(request):
     products = request.user.products.exclude(status=Product.DELETED)
-    order_items = OrderItem.objects.filter(product__user=request.user)
+    print("product user " , products)
+    print(request.user)
+    order_items = OrderItem.objects.all()
     for i in order_items:
         print(i)
     return render(request, 'userprofile/seller.html',{
