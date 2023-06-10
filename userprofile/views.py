@@ -72,93 +72,119 @@ def handlesellerlogin(request):
            return redirect('/admin/seller-login')
     return render(request,'registration/sellerlogin.html')
 
-
+@login_required
 def vendor_detail(request, pk):
-    user = User.objects.get(pk=pk)
-    products = user.products.filter(status=Product.ACTIVE)
+    if request.user.is_authenticated and request.user.is_superuser:
 
-    return render(request, 'userprofile/vendor_detail.html',{
-        'user': user,
-        'products' : products,
+        user = User.objects.get(pk=pk)
+        products = user.products.filter(status=Product.ACTIVE)
 
-    })
+        return render(request, 'userprofile/vendor_detail.html',{
+            'user': user,
+            'products' : products,
+
+        })
+    else:
+        return render(request,'registration/sellerlogin.html')
+    
 
 @login_required
 def seller(request):
-    products = request.user.products.exclude(status=Product.DELETED)
-    print("product user " , products)
-    print(request.user)
-    order_items = OrderItem.objects.all()
-    for i in order_items:
-        print(i)
-    return render(request, 'userprofile/seller.html',{
-        'products': products,
-        'order_items': order_items,
-    })
+    if request.user.is_authenticated and request.user.is_superuser:
+    # products = request.user.products.exclude(status=Product.DELETED)
+        products = Product.objects.all()
+        print("product user " , products)
+        print(request.user)
+        order_items = OrderItem.objects.all()
+        for i in order_items:
+            print(i)
+        return render(request, 'userprofile/seller.html',{
+            'products': products,
+            'order_items': order_items,
+        })
+    else:
+        return render(request,'registration/sellerlogin.html')
+
 
 @login_required
 def seller_order_detail(request,pk):
-    order = get_object_or_404(Order, pk=pk)
-    orderitem = OrderItem.objects.get(order_id=order.id)
-    print(orderitem.quantity)
-    print(orderitem.product.title)
-    print(orderitem.price)
+    if request.user.is_authenticated and request.user.is_superuser:
 
-    return render(request, 'userprofile/seller_order_detail.html',{
-        'orderitem': orderitem,
-    })
+        order = get_object_or_404(Order, pk=pk)
+        orderitem = OrderItem.objects.get(order_id=order.id)
+
+        return render(request, 'userprofile/seller_order_detail.html',{
+            'orderitem': orderitem,
+        })
+    else:
+        return render(request,'registration/sellerlogin.html')
+    
 
 @login_required
 def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+    if request.user.is_authenticated and request.user.is_superuser:
 
-        if form.is_valid():
-            title = request.POST.get('title')
-            product = form.save(commit=False)
-            product.user = request.user
-            product.slug = slugify(title)
-            product.save()
+        if request.method == 'POST':
+            form = ProductForm(request.POST, request.FILES)
 
-            messages.success(request, 'The Product was added!')
-            return redirect('/admin/seller')
+            if form.is_valid():
+                title = request.POST.get('title')
+                product = form.save(commit=False)
+                product.user = request.user
+                product.slug = slugify(title)
+                product.save()
+
+                messages.success(request, 'The Product was added!')
+                return redirect('/admin/seller')
+            else:
+                print(form.errors)
+
         else:
-            print(form.errors)
+            form = ProductForm()
 
+        return render(request, 'userprofile/add_product.html',{
+            'title' : 'Add Product',
+            'form' : form
+        })
     else:
-        form = ProductForm()
-
-    return render(request, 'userprofile/add_product.html',{
-        'title' : 'Add Product',
-        'form' : form
-    })
+        return render(request,'registration/sellerlogin.html')
+    
 
 @login_required
 def edit_product(request, pk):
-    product = Product.objects.filter(user=request.user).get(pk=pk)
+    if request.user.is_authenticated and request.user.is_superuser:
 
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        product = Product.objects.get(pk=pk)
+        if request.method == 'POST':
+            form = ProductForm(request.POST, request.FILES, instance=product)
 
-        if form.is_valid():
-            form.save()
+            if form.is_valid():
+                form.save()
 
-            messages.success(request, 'The Changes was added!')
-            return redirect('seller')
+                messages.success(request, 'The Changes was added!')
+                return redirect('seller')
 
+        else:
+            form = ProductForm(instance=product)
+            return render(request, 'userprofile/add_product.html',{
+                'title' : 'Edit Product',
+                'product' : product,
+                'form' : form
+            })
     else:
-       form = ProductForm(instance=product)
-    return render(request, 'userprofile/add_product.html',{
-        'title' : 'Edit Product',
-        'product' : product,
-        'form' : form
-    })
+        return render(request,'registration/sellerlogin.html')
+    
 
 @login_required
 def delete_product(request, pk):
-    product = Product.objects.filter(user=request.user).get(pk=pk)
-    product.status = Product.DELETED
-    product.save()
+    if request.user.is_authenticated and request.user.is_superuser:
 
-    messages.success(request, 'The Product was deleted!')
-    return redirect('seller')
+        product = Product.objects.get(pk=pk)
+        product.status = Product.DELETED
+        product.save()
+
+        messages.success(request, 'The Product was deleted!')
+        return redirect('seller')
+    else:
+        return render(request,'registration/sellerlogin.html')
+    

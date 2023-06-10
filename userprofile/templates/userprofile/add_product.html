@@ -5,9 +5,8 @@
 {% block content %}
   <h1 class="text-2xl mt-6  text-center bg-green-800 text-white rounded-xl">{{ title }}</h1>
 
-  <form method="post" action="{% url 'add_product' %}" enctype="multipart/form-data" class="space-y-5">
+  <form method="post" action="{% if product.id %}{% url 'edit_product' product.id %}{% else %}{% url 'add_product' %}{% endif %}" enctype="multipart/form-data" class="space-y-5">
     {% csrf_token %} 
-
     {{ form.as_p }}
 
     <button class="py-4 px-8 bg-green-800 text-white rounded-xl">Submit</button>
