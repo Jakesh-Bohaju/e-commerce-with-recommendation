@@ -59,13 +59,14 @@ def handlesignup(request):
         return redirect('/login')
     return render(request,'registration/signup.html') 
 
-
+@login_required
 def add_to_cart(request, product_id):
     cart = Cart(request)
     cart.add(product_id)
 
     return redirect('frontpage')
 
+@login_required
 def change_quantity(request, product_id):
     action = request.GET.get('action','')
 
@@ -80,13 +81,14 @@ def change_quantity(request, product_id):
 
     return redirect('cart_view')
 
-
+@login_required
 def remove_from_cart(request, product_id):
     cart = Cart(request)
     cart.remove(product_id)
 
     return redirect('cart_view')
-  
+
+@login_required
 def cart_view(request):
     cart = Cart(request)
 

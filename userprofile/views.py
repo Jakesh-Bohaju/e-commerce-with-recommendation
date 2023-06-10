@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 # from django.contrib.auth.forms import UserCreationForm
@@ -81,7 +82,8 @@ def vendor_detail(request, pk):
         'products' : products,
 
     })
-    
+
+@login_required
 def seller(request):
     products = request.user.products.exclude(status=Product.DELETED)
     print("product user " , products)
@@ -94,6 +96,7 @@ def seller(request):
         'order_items': order_items,
     })
 
+@login_required
 def seller_order_detail(request,pk):
     order = get_object_or_404(Order, pk=pk)
     orderitem = OrderItem.objects.get(order_id=order.id)
@@ -105,7 +108,7 @@ def seller_order_detail(request,pk):
         'orderitem': orderitem,
     })
 
-
+@login_required
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -129,7 +132,8 @@ def add_product(request):
         'title' : 'Add Product',
         'form' : form
     })
-    
+
+@login_required
 def edit_product(request, pk):
     product = Product.objects.filter(user=request.user).get(pk=pk)
 
@@ -150,6 +154,7 @@ def edit_product(request, pk):
         'form' : form
     })
 
+@login_required
 def delete_product(request, pk):
     product = Product.objects.filter(user=request.user).get(pk=pk)
     product.status = Product.DELETED
