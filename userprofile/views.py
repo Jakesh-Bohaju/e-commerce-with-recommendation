@@ -62,7 +62,7 @@ def handlesellerlogin(request):
        uname=request.POST.get('username')
        pass1=request.POST.get('pass1')
        myuser=authenticate(username=uname,password=pass1)
-       if myuser is not None:
+       if myuser is not None and myuser.is_superuser:
            login(request,myuser)
            messages.success(request,'login success')
            return redirect('/admin/seller')
