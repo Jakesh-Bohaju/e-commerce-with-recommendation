@@ -4,5 +4,4 @@ db.sqlite3
 __pycache__
 media/
 ./migrations
-adminDesign/
-front_end_design/
+
