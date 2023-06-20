@@ -54,30 +54,30 @@ def handlesellersignup(request):
         #     pass
 
         is_vendor = False
-        if request.get_full_path() == '/vendor/seller-signup':
+        if request.get_full_path() == '/vendor/vendor-signup':
             is_vendor = True
         myuser = EcommerceUser.objects.create_user(uname, email, password, is_vendor=is_vendor)
         myuser.save()
-        return render(request, 'userprofile/seller.html')
+        return render(request, 'registration/login.html')
     return render(request, 'registration/sellersignup.html')
 
 
-def handlesellerlogin(request):
-    if request.method == "GET":
-        return render(request, 'registration/sellerlogin.html')
-
-    if request.method == 'POST':
-        uname = request.POST.get('username')
-        pass1 = request.POST.get('pass1')
-        myuser = authenticate(username=uname, password=pass1)
-        if myuser is not None and myuser.is_vendor:
-            login(request, myuser)
-            messages.success(request, 'login success')
-            return redirect('/vendor/seller')
-        else:
-            messages.error(request, 'Invalid Credentials')
-            return redirect('/vendor/seller-login')
-    return render(request, 'registration/sellerlogin.html')
+# def handlesellerlogin(request):
+#     if request.method == "GET":
+#         return render(request, 'registration/sellerlogin.html')
+#
+#     if request.method == 'POST':
+#         uname = request.POST.get('username')
+#         pass1 = request.POST.get('pass1')
+#         myuser = authenticate(username=uname, password=pass1)
+#         if myuser is not None and myuser.is_vendor:
+#             login(request, myuser)
+#             messages.success(request, 'login success')
+#             return redirect('/vendor/seller')
+#         else:
+#             messages.error(request, 'Invalid Credentials')
+#             return redirect('/vendor/seller-login')
+#     return render(request, 'registration/sellerlogin.html')
 
 
 @login_required
@@ -93,7 +93,7 @@ def vendor_detail(request, pk):
 
         })
     else:
-        return render(request, 'registration/sellerlogin.html')
+        return render(request, 'registration/login.html')
 
 
 @login_required
@@ -112,21 +112,22 @@ def seller(request, *args, **kwargs):
         except:
             pass
     else:
-        return render(request, 'registration/sellerlogin.html')
+        return render(request, 'registration/login.html')
 
 
 @login_required
-def seller_order_detail(request, pk, *args, **kwargs):
+def seller_order_detail(request, user_pk, order_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
 
-        order = get_object_or_404(Order, pk=pk)
-        # orderitem = OrderItem.objects.get(order_id=order.id)
+        # order = get_object_or_404(Order, pk=order_pk)
+        orderitem = OrderItem.objects.get(pk=order_pk)
+        print("sdsd", orderitem)
 
         return render(request, 'userprofile/seller_order_detail.html', {
-            'orderitem': order,
+            'orderitem': orderitem,
         })
     else:
-        return render(request, 'registration/sellerlogin.html')
+        return render(request, 'registration/login.html')
 
 
 @login_required
@@ -143,7 +144,7 @@ def add_product(request, *args, **kwargs):
                 product.save()
 
                 messages.success(request, 'The Product was added!')
-                return redirect('/ecomadmin/seller')
+                return redirect('/vendor/' + str(request.user.id))
             else:
                 print(form.errors)
 
@@ -159,10 +160,10 @@ def add_product(request, *args, **kwargs):
 
 
 @login_required
-def edit_product(request, pk, *args, **kwargs):
+def edit_product(request, user_pk, product_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
 
-        product = Product.objects.filter(user=request.user).get(pk=pk)
+        product = Product.objects.filter(user=request.user).get(pk=product_pk)
         if request.method == 'POST':
             form = ProductForm(request.POST, request.FILES, instance=product)
 
@@ -170,7 +171,7 @@ def edit_product(request, pk, *args, **kwargs):
                 form.save()
 
                 messages.success(request, 'The Changes was added!')
-                return redirect('seller')
+                return redirect('/vendor/' + str(request.user.id))
 
         else:
             form = ProductForm(instance=product)
@@ -184,14 +185,14 @@ def edit_product(request, pk, *args, **kwargs):
 
 
 @login_required
-def delete_product(request, pk, *args, **kwargs):
+def delete_product(request, user_pk, product_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
 
-        product = Product.objects.filter(user=request.user).get(pk=pk)
+        product = Product.objects.filter(user=request.user).get(pk=product_pk)
         product.status = Product.DELETED
         product.save()
 
         messages.success(request, 'The Product was deleted!')
-        return redirect('seller')
+        return redirect('/vendor/' + str(request.user.id))
     else:
         return render(request, 'registration/sellerlogin.html')

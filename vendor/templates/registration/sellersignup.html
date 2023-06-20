@@ -18,7 +18,7 @@
 
         </div>
         <div class="col-md-8 mt-2">
-            <h3 class="text-secondary text-center">Sign Up</h3>
+            <h3 class="text-secondary text-center">Vendor Sign Up</h3>
             <form action="{% url 'handlesellersignup' %}" method="post">{% csrf_token %}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person"
                      viewBox="0 0 16 16">
@@ -60,7 +60,7 @@
                 </div>
             </form>
 
-            <p>Already User? <a href="{% url 'handlesellerlogin' %}">LogIn</a></p>
+            <p>Already User? <a href="{% url 'login' %}">LogIn</a></p>
         </div>
     </div>
 

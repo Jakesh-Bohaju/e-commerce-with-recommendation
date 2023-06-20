@@ -14,11 +14,15 @@
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Total</th>
+                <th>Order Tracking</th>
+                <th>Action</th>
             </tr>
             <tr>
                 <td>{{ orderitem.product.title }}</td>
                 <td>{{ orderitem.quantity }}</td>
                 <td>Rs. {{ orderitem.price }}</td>
+                <td>{{ orderitem.tracking_status }}</td>
+                <td>Edit</td>
             </tr>
         </table>
 

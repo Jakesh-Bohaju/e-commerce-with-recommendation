@@ -6,7 +6,7 @@
     <h1 class="text-2xl mt-6  text-center bg-green-800 text-white rounded-xl">{{ title }}</h1>
 
     <form method="post"
-          action="{% if product.id %}{% url 'edit_product' product.id %}{% else %}{% url 'add_product' request.user.id %}{% endif %}"
+          action="{% if product.id %}{% url 'edit_product' user_pk=request.user.id product_pk=product.id %}{% else %}{% url 'add_product' request.user.id %}{% endif %}"
           enctype="multipart/form-data" class="space-y-5">
         {% csrf_token %}
         {{ form.as_p }}
@@ -15,8 +15,10 @@
     </form>
 
     {% if product %}
-        <a href="{% url 'delete_product' product.id %}"
+        <a href="{% url 'delete_product' user_pk=request.user.id product_pk=product.id %}"
            class="mt-2 inline-block py-4 px-2 bg-red-500 text-white rounded-xl">Delete Product</a>
     {% endif %}
 
-{% endblock %} 
+
+
+{% endblock %}

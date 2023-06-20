@@ -128,7 +128,8 @@ def checkout(request):
                 quantity = int(item['quantity'])
                 price = product.price * quantity
 
-                item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity)
+                item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity,
+                                                created_by_id=request.user.id)
             cart.clear()
 
         return redirect('frontpage')
