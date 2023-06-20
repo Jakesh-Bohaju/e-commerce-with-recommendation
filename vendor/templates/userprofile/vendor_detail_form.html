@@ -1,0 +1,16 @@
+{% extends 'core/base.html' %}
+{% block title %} {% firstof user.get_full_name user.username %}
+{% endblock %}
+{% block content %}
+    <h1 class="text-2xl"> {% firstof user.get_full_name user.username %}</h1>
+    <div class="flex flex-wrap">
+        <form method="post" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+           Complete Form Job
+            <button class="btn btn-primary" type="submit">Update Profile</button>
+        </form>
+    </div>
+
+
+
+{% endblock %}
