@@ -14,6 +14,7 @@ class VendorDetail(models.Model):
     company_registered_document = models.ImageField(blank=True, null=True, upload_to='Registered Company')
     pan_vat_registered_document = models.ImageField(upload_to='Pan Vat Registered')
     vendor = models.ForeignKey(EcommerceUser, related_name="vendor_detail", on_delete=models.CASCADE)
+    verify_status = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey(EcommerceUser, related_name="vendor_detail_modified", on_delete=models.SET_NULL,
                                     blank=True, null=True)

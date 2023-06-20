@@ -5,7 +5,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, ListView, DeleteView
 
 from ecomadmin.forms import CategoryForm
-from store.models import Category
+from store.models import Category, Product
+from vendor.models import VendorDetail
 
 
 # Create your views here.
@@ -42,3 +43,20 @@ class CategoryView(LoginRequiredMixin, ListView):
 class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('dashboard:category')
+
+
+class ProductView(LoginRequiredMixin, ListView):
+    template_name = "product.html"
+    model = Product
+    context_object_name = "products"
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('dashboard:product')
+
+#
+# class VendorView(LoginRequiredMixin, ListView):
+#     template_name = "vendor.html"
+#     model = VendorDetail
+#     context_object_name = "vendors"
