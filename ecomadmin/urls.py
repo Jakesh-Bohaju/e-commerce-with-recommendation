@@ -20,10 +20,15 @@ urlpatterns = [
     # path('update/vendor/<slug:slug>', VendorUpdateFormView.as_view(), name="vendor_update_form"),
     # path('delete/vendor/<slug:slug>/', VendorDeleteView.as_view(), name='delete_vendor'),
     #
-    # # order RUD (Read, Update, Delete)
-    # path('order', OrderView.as_view(), name="order"),
-    # path('update/order/<slug:slug>', OrderUpdateFormView.as_view(), name="order_update_form"),
+    # order RUD (Read, Update, Delete)
+    path('order', OrderView.as_view(), name="order"),
+    path('update/order/<int:pk>', OrderUpdateFormView.as_view(), name="order_update_form"),
     # path('delete/order/<slug:slug>/', OrderDeleteView.as_view(), name='delete_order'),
+
+    # # tracking RUD (Read, Update, Delete)
+    path('tracking', TrackingView.as_view(), name="tracking"),
+    path('update/tracking/<int:pk>', TrackingUpdateFormView.as_view(), name="tracking_update_form"),
+    # path('delete/tracking/<slug:slug>/', TrackingDeleteView.as_view(), name='delete_tracking'),
 
     # # transaction RD (Read, Delete)
     # path('transaction', TransactionView.as_view(), name="transaction"),

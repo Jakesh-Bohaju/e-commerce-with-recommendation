@@ -99,32 +99,32 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-shopping-bag"></i>
+                <i class="fas fa-fw fa-shopping-cart"></i>
                 <span>Order</span>
             </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Inventory Information:</h6>
-                    <a class="collapse-item" href="{% url 'dashboard:category' %}">Categories</a>
-                    <a class="collapse-item" href="{% url 'dashboard:product' %}">Products</a>
+                    <a class="collapse-item" href="{% url 'dashboard:order' %}">Orders</a>
+                    <a class="collapse-item" href="{% url 'dashboard:product' %}">Tracking</a>
                 </div>
             </div>
         </li>
 
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
                aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-users"></i>
+                <i class="fas fa-fw fa-money-bill"></i>
                 <span>Transaction</span>
             </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            <div id="collapseFour" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Vendor Information:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Vendors</a>
+                    <a class="collapse-item" href="utilities-color.html">Transactions</a>
                 </div>
             </div>
         </li>
@@ -139,12 +139,12 @@
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
                aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-shopping-bag"></i>
+                <i class="fas fa-fw fa-chart-bar"></i>
                 <span>Insight</span>
             </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseFive" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Inventory Information:</h6>
                     <a class="collapse-item" href="{% url 'dashboard:category' %}">Categories</a>

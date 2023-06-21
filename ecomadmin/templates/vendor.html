@@ -25,60 +25,60 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-{#                    <tbody>#}
-{#                    {% for product in products %}#}
-{#                        <tr>#}
-{#                            <td>{{ forloop.counter }}</td>#}
-{#                            <td>{{ product.title }}</td>#}
-{#                            <td>{{ product.category.title }}</td>#}
-{#                            <td>{{ product.user.username }}</td>#}
-{#                            <td>{{ product.price }}</td>#}
-{#                            <td>{{ product.description |truncatewords:25 }}</td>#}
-{#                            <td><img alt="{{ product.title }}" src="{{ product.image.url }}"#}
-{#                                     class="rounded mx-auto d-block"#}
-{#                                     height="50" width="100"></td>#}
-{#                            <td><a class="btn btn-info btn-sm" style="color: white"#}
-{#                                   data-toggle="modal"#}
-{#                                   data-target="#category{{ product.slug }}del">#}
-{#                                <i class="fas fa-trash-alt">#}
-{#                                </i>#}
-{#                                Delete#}
-{#                            </a></td>#}
-{#                        </tr>#}
-{#                        <div id="category{{ product.slug }}del" class="modal fade"#}
-{#                             role="dialog">#}
-{#                            <div class="modal-dialog">#}
-{#                                <!-- Modal content-->#}
-{#                                <div class="modal-content">#}
-{#                                    <div class="modal-header">#}
-{#                                        <h4 class="modal-title" style="alignment: left">#}
-{#                                            Delete {{ product.title }}</h4>#}
-{#                                        <button type="button" class="close" data-dismiss="modal">#}
-{#                                            &times;#}
-{#                                        </button>#}
-{#                                    </div>#}
-{#                                    <div class="modal-body">#}
-{#                                        <p>Are you sure you want to delete#}
-{#                                            "{{ product.title }}"?</p>#}
-{#                                        <div class="modal-del-fo">#}
-{#                                            <form method="post"#}
-{#                                                  action="{% url 'dashboard:delete_product' product.slug %}">#}
-{#                                                {% csrf_token %}#}
-{#                                                <button value="Confirm" class="btn btn-info btn-sm">#}
-{#                                                    Yes#}
-{#                                                </button>#}
-{#                                                <button class="btn btn-info btn-sm"#}
-{#                                                        data-dismiss="modal">No#}
-{#                                                </button>#}
-{#                                            </form>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    {% endfor %}#}
-{#                    </tbody>#}
-{#                </table>#}
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ product.title }}</td>
+                            <td>{{ product.category.title }}</td>
+                            <td>{{ product.user.username }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.description |truncatewords:25 }}</td>
+                            <td><img alt="{{ product.title }}" src="{{ product.image.url }}"
+                                     class="rounded mx-auto d-block"
+                                     height="50" width="100"></td>
+                            <td><a class="btn btn-info btn-sm" style="color: white"
+                                   data-toggle="modal"
+                                   data-target="#category{{ product.slug }}del">
+                                <i class="fas fa-trash-alt">
+                                </i>
+                                Delete
+                            </a></td>
+                        </tr>
+                        <div id="category{{ product.slug }}del" class="modal fade"
+                             role="dialog">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" style="alignment: left">
+                                            Delete {{ product.title }}</h4>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            &times;
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete
+                                            "{{ product.title }}"?</p>
+                                        <div class="modal-del-fo">
+                                            <form method="post"
+                                                  action="{% url 'dashboard:delete_product' product.slug %}">
+                                                {% csrf_token %}
+                                                <button value="Confirm" class="btn btn-info btn-sm">
+                                                    Yes
+                                                </button>
+                                                <button class="btn btn-info btn-sm"
+                                                        data-dismiss="modal">No
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
