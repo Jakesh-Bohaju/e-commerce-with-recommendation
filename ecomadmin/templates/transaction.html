@@ -22,15 +22,15 @@
                         <tr>
                             <th>S.N</th>
                             <th>Vendor</th>
-                            <th>Total Amount</th>
+                            <th>Total Amount (Rs.)</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for category in categories %}
+                        {% for transaction,total in transaction_list.items %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ category.title }}</td>
-                                <td></td>
+                                <td>{{ transaction }}</td>
+                                <td>{% if total == None %}0{% else %}{{ total }}{% endif %}</td>
                             </tr>
 
                         {% endfor %}

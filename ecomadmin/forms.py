@@ -9,11 +9,3 @@ class CategoryForm(forms.ModelForm):
         fields = [
             'title'
         ]
-
-
-# class TrackingUpdateForm(forms.ModelForm):
-#     class Meta:
-#         model = OrderItem
-#         fields = [
-#             'tracking_status'
-#         ]

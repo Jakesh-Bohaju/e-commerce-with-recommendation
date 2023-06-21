@@ -210,7 +210,7 @@ def delete_product(request, user_pk, product_pk, *args, **kwargs):
 
 
 class SellerProfileView(LoginRequiredMixin, CreateView):
-    template_name = "forms/category_form.html"
+    # template_name = "forms/category_form.html"
     fields = ['company_name', 'company_address', 'company_phone', 'pan_vat_no',
               'company_registered_document', 'pan_vat_registered_document', 'vendor']
     model = VendorDetail

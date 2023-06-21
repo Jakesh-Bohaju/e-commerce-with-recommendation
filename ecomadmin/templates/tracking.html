@@ -45,53 +45,53 @@
                                          class="rounded mx-auto d-block"
                                          height="50" width="100"></td>
                                 <td>{{ order_item.tracking_status }}</td>
-                                <td><a class="btn btn-info btn-sm" style="color: white"
-                                       data-toggle="modal"
-                                       data-target="#order{{ order_item.id }}">
+                                <td><a class="btn btn-info btn-sm" style="color: white" href="{% url 'dashboard:tracking_update_form' order_item.id %} ">
+{#                                      data-toggle="modal"#}
+{#                                       data-target="#order{{ order_item.id }}" >#}
                                     <i class="fas fa-trash-alt">
                                     </i>
                                     Edit
                                 </a></td>
                             </tr>
-                            <div id="order{{ order_item.id }}" class="modal fade"
-                                 role="dialog">
-                                <div class="modal-dialog">
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" style="alignment: left">
-                                                Update Tracking Status For "{{ order_item.product.title }}"</h4>
-                                            <button type="button" class="close" data-dismiss="modal">
-                                                &times;
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="modal-del-fo">
-                                                <form method="post"
-                                                      action="{% url 'dashboard:tracking_update_form' order_item.id %}">
-                                                    {% csrf_token %}
-                                                    <div class="form-row">
-                                                        <label for="tracking_status">Tracking Status</label>
-                                                        <select class="form-control select2" name="tracking_status">
-                                                            {% for option in form.fields.tracking_status.choices %}
-                                                                <option value="{{ option.0 }}"
-                                                                        {% if  form.tracking_status.value == option.0 %}selected {% endif %}>{{ option.1 }}
-                                                                </option>
-                                                            {% endfor %}
-                                                        </select>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-info btn-sm">
-                                                        Update
-                                                    </button>
-                                                    <button class="btn btn-info btn-sm"
-                                                            data-dismiss="modal">Cancel
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+{#                            <div id="order{{ order_item.id }}" class="modal fade"#}
+{#                                 role="dialog">#}
+{#                                <div class="modal-dialog">#}
+{#                                    <!-- Modal content-->#}
+{#                                    <div class="modal-content">#}
+{#                                        <div class="modal-header">#}
+{#                                            <h4 class="modal-title" style="alignment: left">#}
+{#                                                Update Tracking Status For "{{ order_item.product.title }}"</h4>#}
+{#                                            <button type="button" class="close" data-dismiss="modal">#}
+{#                                                &times;#}
+{#                                            </button>#}
+{#                                        </div>#}
+{#                                        <div class="modal-body">#}
+{#                                            <div class="modal-del-fo">#}
+{#                                                <form method="post"#}
+{#                                                      action="{% url 'dashboard:tracking_update_form' order_item.id %}">#}
+{#                                                    {% csrf_token %}#}
+{#                                                    <div class="form-row">#}
+{#                                                        <label for="tracking_status">Tracking Status </label>#}
+{#                                                        <select class="form-control select2" name="tracking_status">#}
+{#                                                            {% for option in form.fields.tracking_status.choices %}#}
+{#                                                                <option value="{{ option.0 }}"#}
+{#                                                                        {% if  form.tracking_status.value == option.0 %}selected {% endif %}>{{ option.1 }}#}
+{#                                                                </option>#}
+{#                                                            {% endfor %}#}
+{#                                                        </select>#}
+{#                                                    </div>#}
+{#                                                    <button type="submit" class="btn btn-info btn-sm">#}
+{#                                                        Update#}
+{#                                                    </button>#}
+{#                                                    <button class="btn btn-info btn-sm"#}
+{#                                                            data-dismiss="modal">Cancel#}
+{#                                                    </button>#}
+{#                                                </form>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
                         {% endfor %}
                         </tbody>
                     </table>

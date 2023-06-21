@@ -113,10 +113,15 @@ class TrackingView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
 
 class TrackingUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    template_name = "forms/tracking_update_form.html"
     model = OrderItem
-    # from_class = TrackingUpdateForm
     fields = ["tracking_status"]
     success_url = reverse_lazy('dashboard:tracking')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vendors'] = VendorDetail.objects.all()
+        return context
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
@@ -137,10 +142,12 @@ class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
         transaction_dict = {}
         vendors = VendorDetail.objects.all()
         order_items = OrderItem.objects.all()
-        print("dfsdf")
         for vendor in vendors:
-            total_amount = OrderItem.objects.filter(product__user__username=vendor.vendor.username).values(
-                'vendor').annotate(total_amount=Sum('price'))
-            print(total_amount)
+            vendor_name = vendor.company_name
+            total_amount = OrderItem.objects.filter(product__user__username=vendor.vendor.username).aggregate(
+                total=Sum('price'))
+            transaction_dict[vendor_name] = total_amount[
+                'total']
+        context['transaction_list'] = transaction_dict
 
         return context
