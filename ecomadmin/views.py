@@ -1,6 +1,7 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Sum
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, ListView, DeleteView, UpdateView
@@ -112,20 +113,34 @@ class TrackingView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
 
 class TrackingUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
-    template_name = "forms/category_form.html"
     model = OrderItem
-    fields = ["category_title"]
+    # from_class = TrackingUpdateForm
+    fields = ["tracking_status"]
     success_url = reverse_lazy('dashboard:tracking')
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
 
 # class TrackingDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
 #     model = OrderItem
 #     success_url = reverse_lazy('dashboard:tracking')
 
 
-# class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
-#     template_name = "tracking.html"
-#     model = OrderItem
-#     context_object_name = "transactions"
+class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = "transaction.html"
+    model = OrderItem
+    context_object_name = "transactions"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        transaction_dict = {}
+        vendors = VendorDetail.objects.all()
+        order_items = OrderItem.objects.all()
+        print("dfsdf")
+        for vendor in vendors:
+            total_amount = OrderItem.objects.filter(product__user__username=vendor.vendor.username).values(
+                'vendor').annotate(total_amount=Sum('price'))
+            print(total_amount)
+
+        return context

@@ -20,39 +20,47 @@
                         <thead>
                         <tr>
                             <th>S.N</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price (Rs.)</th>
                             <th>Order Id</th>
                             <th>Order By</th>
-                            <th>Order From</th>
-                            <th>Payment</th>
-                            <th>Is Paid</th>
+                            <th>Vendor</th>
+                            <th>Image</th>
+                            <th>Tracking</th>
                             <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for order in orders %}
+                        {% for order_item in order_items %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ order.id }}</td>
-                                <td>{{ order.created_by.username }}</td>
-                                <td>{{ order.address }}, {{ order.city }}<br>{{ order.zipcode }}</td>
-                                <td>{{ order.paid_amount }}</td>
-                                <td>{% if order.is_paid %}Paid{% else %}Not Paid{% endif %}</td>
+                                <td>{{ order_item.product.title }}</td>
+                                <td>{{ order_item.quantity }}</td>
+                                <td>{{ order_item.price }}</td>
+                                <td>{{ order_item.order.id }}</td>
+                                <td>{{ order_item.created_by.username }}</td>
+                                <td>{{ order_item.product.user.username }}</td>
+                                <td><img alt="{{ order_item.product.title }}" src="{{ order_item.product.image.url }}"
+                                         class="rounded mx-auto d-block"
+                                         height="50" width="100"></td>
+                                <td>{{ order_item.tracking_status }}</td>
                                 <td><a class="btn btn-info btn-sm" style="color: white"
                                        data-toggle="modal"
-                                       data-target="#order{{ order.id }}">
+                                       data-target="#order{{ order_item.id }}">
                                     <i class="fas fa-trash-alt">
                                     </i>
                                     Edit
                                 </a></td>
                             </tr>
-                            <div id="order{{ order.id }}" class="modal fade"
+                            <div id="order{{ order_item.id }}" class="modal fade"
                                  role="dialog">
                                 <div class="modal-dialog">
                                     <!-- Modal content-->
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" style="alignment: left">
-                                                Update {{ order.id }}</h4>
+                                                Update Tracking Status For "{{ order_item.product.title }}"</h4>
                                             <button type="button" class="close" data-dismiss="modal">
                                                 &times;
                                             </button>
@@ -60,14 +68,17 @@
                                         <div class="modal-body">
                                             <div class="modal-del-fo">
                                                 <form method="post"
-                                                      action="{% url 'dashboard:order_update_form' order.id %}">
+                                                      action="{% url 'dashboard:tracking_update_form' order_item.id %}">
                                                     {% csrf_token %}
                                                     <div class="form-row">
-                                                        <label for="is_paid">Is Paid</label>
-                                                        <input type="checkbox" class="form-control"
-                                                               id="is_paid"
-                                                               name="is_paid" {% if order.is_paid %}
-                                                               checked {% endif %}>
+                                                        <label for="tracking_status">Tracking Status</label>
+                                                        <select class="form-control select2" name="tracking_status">
+                                                            {% for option in form.fields.tracking_status.choices %}
+                                                                <option value="{{ option.0 }}"
+                                                                        {% if  form.tracking_status.value == option.0 %}selected {% endif %}>{{ option.1 }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
                                                     </div>
                                                     <button type="submit" class="btn btn-info btn-sm">
                                                         Update

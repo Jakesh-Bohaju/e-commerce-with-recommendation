@@ -7,6 +7,14 @@ from django.utils.text import slugify
 
 from vendor.models import EcommerceUser
 
+ORDER_TRACKING_CHOICE = (
+    ("ORDER_REQUESTED", 'Order Requested'),
+    ("PACKAGING", 'Packaging'),
+    ("ON_THE_WAY", 'On The Way'),
+    ("DELIVERED", 'Delivered')
+
+)
+
 
 class Category(models.Model):
     title = models.CharField(max_length=50)
@@ -105,14 +113,6 @@ class OrderItem(models.Model):
     PACKAGING = 'Packaging'
     ON_THE_WAY = 'On The Way'
     DELIVERED = 'Delivered'
-
-    ORDER_TRACKING_CHOICE = (
-        (ORDER_REQUESTED, 'Order Requested'),
-        (PACKAGING, 'Packaging'),
-        (ON_THE_WAY, 'On The Way'),
-        (DELIVERED, 'Delivered')
-
-    )
 
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)

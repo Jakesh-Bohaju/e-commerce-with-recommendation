@@ -1,11 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ImproperlyConfigured
 
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from django.urls import reverse_lazy
 # from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.views.generic import CreateView
 
 from .models import *
 
@@ -101,17 +105,20 @@ def seller(request, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
         # products = request.user.products.exclude(status=Product.DELETED)
         try:
-            print("lllllll", VendorDetail.objects.all())
-            if VendorDetail.objects.all() and VendorDetail.objects.get(vendor_id=request.user.id):
-                print("vvvvvvv")
-                products = request.user.products.exclude(status=Product.DELETED)
-                order_items = OrderItem.objects.filter(product__user=request.user)
-                return render(request, 'userprofile/seller.html', {
-                    'products': products,
-                    'order_items': order_items,
-                })
+            if VendorDetail.objects.all():
+                try:
+                    has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+                    if has_vendor:
+                        products = request.user.products.exclude(status=Product.DELETED)
+                        order_items = OrderItem.objects.filter(product__user=request.user)
+                        return render(request, 'userprofile/seller.html', {
+                            'products': products,
+                            'order_items': order_items,
+                        })
+                except VendorDetail.DoesNotExist:
+                    return render(request, 'userprofile/vendor_detail_form.html')
+
             else:
-                print("tttttttt")
                 return render(request, 'userprofile/vendor_detail_form.html')
         except:
             pass
@@ -200,3 +207,18 @@ def delete_product(request, user_pk, product_pk, *args, **kwargs):
         return redirect('/vendor/' + str(request.user.id))
     else:
         return render(request, 'registration/sellerlogin.html')
+
+
+class SellerProfileView(LoginRequiredMixin, CreateView):
+    template_name = "forms/category_form.html"
+    fields = ['company_name', 'company_address', 'company_phone', 'pan_vat_no',
+              'company_registered_document', 'pan_vat_registered_document', 'vendor']
+    model = VendorDetail
+
+    def form_invalid(self, form):
+        return render(self.request, 'forms/category_form.html', {
+            'form': form,
+        })
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('seller', args=[self.kwargs['pk']])

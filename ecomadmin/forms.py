@@ -1,6 +1,6 @@
 from django import forms
 
-from store.models import Category
+from store.models import Category, OrderItem
 
 
 class CategoryForm(forms.ModelForm):
@@ -9,3 +9,11 @@ class CategoryForm(forms.ModelForm):
         fields = [
             'title'
         ]
+
+
+# class TrackingUpdateForm(forms.ModelForm):
+#     class Meta:
+#         model = OrderItem
+#         fields = [
+#             'tracking_status'
+#         ]

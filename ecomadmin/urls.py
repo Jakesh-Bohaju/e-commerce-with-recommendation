@@ -31,5 +31,5 @@ urlpatterns = [
     # path('delete/tracking/<slug:slug>/', TrackingDeleteView.as_view(), name='delete_tracking'),
 
     # # transaction RD (Read, Delete)
-    # path('transaction', TransactionView.as_view(), name="transaction"),
+    path('transaction', TransactionView.as_view(), name="transaction"),
 ]
