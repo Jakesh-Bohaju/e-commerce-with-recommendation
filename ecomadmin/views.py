@@ -64,25 +64,32 @@ class ProductDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     success_url = reverse_lazy('dashboard:product')
 
 
-# class VendorView(LoginRequiredMixin, AdminRequiredMixin, ListView):
-#     template_name = "vendor.html"
-#     model = VendorDetail
-#     context_object_name = "vendors"
-#
-#
-# class VendorUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
-#     template_name = "forms/category_form.html"
-#     model = VendorDetail
-#     fields = ["category_title"]
-#     success_url = reverse_lazy('dashboard:vendor_update_form')
-#
-#     def form_invalid(self, form):
-#         return self.render_to_response(self.get_context_data(form=form))
-#
-#
-# class VendorDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
-#     model = VendorDetail
-#     success_url = reverse_lazy('dashboard:vendor')
+class VendorView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = "vendor.html"
+    model = VendorDetail
+
+    # context_object_name = "vendors"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['verified_vendors'] = VendorDetail.objects.filter(verify_status=True)
+        context['un_verified_vendors'] = VendorDetail.objects.filter(verify_status=False)
+        return context
+
+
+class VendorUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    # template_name = "forms/category_form.html"
+    model = VendorDetail
+    fields = ["verify_status"]
+    success_url = reverse_lazy('dashboard:vendor')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class VendorDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = VendorDetail
+    success_url = reverse_lazy('dashboard:vendor')
 
 
 class OrderView(LoginRequiredMixin, AdminRequiredMixin, ListView):

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ImproperlyConfigured
 
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
@@ -209,7 +209,12 @@ def delete_product(request, user_pk, product_pk, *args, **kwargs):
         return render(request, 'registration/sellerlogin.html')
 
 
-class SellerProfileView(LoginRequiredMixin, CreateView):
+class VendorRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_vendor
+
+
+class SellerProfileView(LoginRequiredMixin, VendorRequiredMixin, CreateView):
     # template_name = "forms/category_form.html"
     fields = ['company_name', 'company_address', 'company_phone', 'pan_vat_no',
               'company_registered_document', 'pan_vat_registered_document', 'vendor']

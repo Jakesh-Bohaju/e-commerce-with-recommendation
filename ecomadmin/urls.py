@@ -16,9 +16,9 @@ urlpatterns = [
     path('delete/product/<slug:slug>/', ProductDeleteView.as_view(), name='delete_product'),
 
     # # vendor RUD (Read, Update, Delete)
-    # path('vendor', VendorView.as_view(), name="vendor"),
-    # path('update/vendor/<slug:slug>', VendorUpdateFormView.as_view(), name="vendor_update_form"),
-    # path('delete/vendor/<slug:slug>/', VendorDeleteView.as_view(), name='delete_vendor'),
+    path('vendor', VendorView.as_view(), name="vendor"),
+    path('update/vendor/<int:pk>', VendorUpdateFormView.as_view(), name="vendor_update_form"),
+    path('delete/vendor/<int:pk>/', VendorDeleteView.as_view(), name='delete_vendor'),
     #
     # order RUD (Read, Update, Delete)
     path('order', OrderView.as_view(), name="order"),
