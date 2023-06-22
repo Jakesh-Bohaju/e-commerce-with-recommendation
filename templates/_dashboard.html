@@ -20,6 +20,7 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'dashboard/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'dashboard/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -78,7 +79,8 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                aria-expanded="true" aria-controls="collapseUtilities">
                 <i class="fas fa-fw fa-users"></i>
-                <span>Vendors</span>
+                <span>Vendors <span class="pl-1">{% if un_verified_vendor_count %}
+                    <sup class="badge-light p-1 text-dark">{{ un_verified_vendor_count }}</sup>{% endif %}</span></span>
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
@@ -102,13 +104,19 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
                aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-shopping-cart"></i>
-                <span>Order</span>
+                <span>Order <span class="pl-1">{% if new_order_count %}
+                    <sup class="badge-light p-1 text-dark">{{ not_paid|add:new_order_count }}</sup>{% endif %}</span>
             </a>
             <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Order Information:</h6>
-                    <a class="collapse-item" href="{% url 'dashboard:order' %}">Orders</a>
-                    <a class="collapse-item" href="{% url 'dashboard:tracking' %}">Tracking</a>
+                    <a class="collapse-item" href="{% url 'dashboard:order' %}">Orders <span
+                            class="pl-1">{% if not_paid %}
+                        <sup class="badge-secondary p-1 text-light">{{ not_paid }}</sup>{% endif %}</span></a>
+                    <a class="collapse-item" href="{% url 'dashboard:tracking' %}">Tracking <span
+                            class="pl-1">{% if new_order_count %}
+                        <sup class="badge-secondary p-1 text-light">{{ new_order_count }}</sup>{% endif %}</span>
+                    </a>
                 </div>
             </div>
         </li>
@@ -146,9 +154,9 @@
             </a>
             <div id="collapseFive" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Inventory Information:</h6>
-                    <a class="collapse-item" href="{% url 'dashboard:category' %}">Categories</a>
-                    <a class="collapse-item" href="{% url 'dashboard:product' %}">Products</a>
+                    <h6 class="collapse-header">Admin Insight:</h6>
+                    <a class="collapse-item" href="#">.....</a>
+                    <a class="collapse-item" href="#">.....</a>
                 </div>
             </div>
         </li>
@@ -463,13 +471,32 @@
 <!-- Custom scripts for all pages-->
 <script src="{% static 'dashboard/js/sb-admin-2.min.js' %}"></script>
 
-<!-- Page level plugins -->
-<script src="{% static 'dashboard/vendor/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'dashboard/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'dashboard/vendor/datatables/jquery.dataTables.min.js' %}"></script>
 
-<!-- Page level custom scripts -->
-<script src="{% static 'dashboard/js/demo/chart-area-demo.js' %}"></script>
-<script src="{% static 'dashboard/js/demo/chart-pie-demo.js' %}"></script>
-
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "pageLength": 5
+        });
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "pageLength": 5
+        });
+</script>
 </body>
 
 </html>

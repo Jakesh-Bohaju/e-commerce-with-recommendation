@@ -8,10 +8,10 @@ from django.utils.text import slugify
 from vendor.models import EcommerceUser
 
 ORDER_TRACKING_CHOICE = (
-    ("ORDER_REQUESTED", 'Order Requested'),
-    ("PACKAGING", 'Packaging'),
-    ("ON_THE_WAY", 'On The Way'),
-    ("DELIVERED", 'Delivered')
+    ("Order Requested", 'Order Requested'),
+    ("Packaging", 'Packaging'),
+    ("On The Way", 'On The Way'),
+    ("Delivered", 'Delivered')
 
 )
 
@@ -109,16 +109,16 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    ORDER_REQUESTED = 'Order Requested'
-    PACKAGING = 'Packaging'
-    ON_THE_WAY = 'On The Way'
-    DELIVERED = 'Delivered'
+    # ORDER_REQUESTED = 'Order Requested'
+    # PACKAGING = 'Packaging'
+    # ON_THE_WAY = 'On The Way'
+    # DELIVERED = 'Delivered'
 
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     price = models.IntegerField()
     quantity = models.IntegerField(default=1)
-    tracking_status = models.CharField(max_length=50, choices=ORDER_TRACKING_CHOICE, default=ORDER_REQUESTED)
+    tracking_status = models.CharField(max_length=50, choices=ORDER_TRACKING_CHOICE, default="Order Requested")
     created_by = models.ForeignKey(EcommerceUser, related_name='ordered_item', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
