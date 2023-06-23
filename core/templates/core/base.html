@@ -118,7 +118,7 @@
                     </a>
                 </button>
                 <div class="dropdown-content">
-                    <a href="">
+                    <a href="{% if request.user.is_vendor %}{% url 'vendor_detail' request.user.id %}{% endif %}">
                         <span class="py-2 px-4  rounded-xl text-white hover:bg-teal-900">Profile</span>
                     </a>
                     <a href="{% url 'logout' %}">

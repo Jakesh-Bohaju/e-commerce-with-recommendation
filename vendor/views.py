@@ -87,15 +87,15 @@ def handlesellersignup(request):
 @login_required
 def vendor_detail(request, pk):
     if request.user.is_authenticated and request.user.is_vendor:
-
-        user = EcommerceUser.objects.get(pk=pk)
-        products = user.products.filter(status=Product.ACTIVE)
-
-        return render(request, 'userprofile/vendor_detail.html', {
-            'user': user,
-            'products': products,
-
-        })
+        try:
+            has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+            if has_vendor:
+                vendor_detail = VendorDetail.objects.get(vendor_id=request.user.id)
+                return render(request, 'userprofile/vendor_detail.html', {
+                    'vendor_detail': vendor_detail,
+                })
+        except VendorDetail.DoesNotExist:
+            return render(request, 'userprofile/vendor_detail_form.html')
     else:
         return render(request, 'registration/login.html')
 
@@ -129,14 +129,18 @@ def seller(request, *args, **kwargs):
 @login_required
 def seller_order_detail(request, user_pk, order_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
+        try:
+            has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+            if has_vendor:
+                # order = get_object_or_404(Order, pk=order_pk)
+                orderitem = OrderItem.objects.get(pk=order_pk)
+                print("sdsd", orderitem)
 
-        # order = get_object_or_404(Order, pk=order_pk)
-        orderitem = OrderItem.objects.get(pk=order_pk)
-        print("sdsd", orderitem)
-
-        return render(request, 'userprofile/seller_order_detail.html', {
-            'orderitem': orderitem,
-        })
+                return render(request, 'userprofile/seller_order_detail.html', {
+                    'orderitem': orderitem,
+                })
+        except VendorDetail.DoesNotExist:
+            return render(request, 'userprofile/vendor_detail_form.html')
     else:
         return render(request, 'registration/login.html')
 
@@ -144,28 +148,33 @@ def seller_order_detail(request, user_pk, order_pk, *args, **kwargs):
 @login_required
 def add_product(request, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
-        if request.method == 'POST':
-            form = ProductForm(request.POST, request.FILES)
+        try:
+            has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+            if has_vendor:
+                if request.method == 'POST':
+                    form = ProductForm(request.POST, request.FILES)
 
-            if form.is_valid():
-                title = request.POST.get('title')
-                product = form.save(commit=False)
-                product.user = request.user
-                product.slug = slugify(title)
-                product.save()
+                    if form.is_valid():
+                        title = request.POST.get('title')
+                        product = form.save(commit=False)
+                        product.user = request.user
+                        product.slug = slugify(title)
+                        product.save()
 
-                messages.success(request, 'The Product was added!')
-                return redirect('/vendor/' + str(request.user.id))
-            else:
-                print(form.errors)
+                        messages.success(request, 'The Product was added!')
+                        return redirect('/vendor/' + str(request.user.id))
+                    else:
+                        print(form.errors)
 
-        else:
-            form = ProductForm()
+                else:
+                    form = ProductForm()
 
-        return render(request, 'userprofile/add_product.html', {
-            'title': 'Add Product',
-            'form': form
-        })
+                return render(request, 'userprofile/add_product.html', {
+                    'title': 'Add Product',
+                    'form': form
+                })
+        except VendorDetail.DoesNotExist:
+            return render(request, 'userprofile/vendor_detail_form.html')
     else:
         return render(request, 'registration/sellerlogin.html')
 
@@ -173,24 +182,28 @@ def add_product(request, *args, **kwargs):
 @login_required
 def edit_product(request, user_pk, product_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
+        try:
+            has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+            if has_vendor:
+                product = Product.objects.filter(user=request.user).get(pk=product_pk)
+                if request.method == 'POST':
+                    form = ProductForm(request.POST, request.FILES, instance=product)
 
-        product = Product.objects.filter(user=request.user).get(pk=product_pk)
-        if request.method == 'POST':
-            form = ProductForm(request.POST, request.FILES, instance=product)
+                    if form.is_valid():
+                        form.save()
 
-            if form.is_valid():
-                form.save()
+                        messages.success(request, 'The Changes was added!')
+                        return redirect('/vendor/' + str(request.user.id))
 
-                messages.success(request, 'The Changes was added!')
-                return redirect('/vendor/' + str(request.user.id))
-
-        else:
-            form = ProductForm(instance=product)
-            return render(request, 'userprofile/add_product.html', {
-                'title': 'Edit Product',
-                'product': product,
-                'form': form
-            })
+                else:
+                    form = ProductForm(instance=product)
+                    return render(request, 'userprofile/add_product.html', {
+                        'title': 'Edit Product',
+                        'product': product,
+                        'form': form
+                    })
+        except VendorDetail.DoesNotExist:
+            return render(request, 'userprofile/vendor_detail_form.html')
     else:
         return render(request, 'registration/sellerlogin.html')
 
@@ -198,13 +211,16 @@ def edit_product(request, user_pk, product_pk, *args, **kwargs):
 @login_required
 def delete_product(request, user_pk, product_pk, *args, **kwargs):
     if request.user.is_authenticated and request.user.is_vendor:
-
-        product = Product.objects.filter(user=request.user).get(pk=product_pk)
-        product.status = Product.DELETED
-        product.save()
-
-        messages.success(request, 'The Product was deleted!')
-        return redirect('/vendor/' + str(request.user.id))
+        try:
+            has_vendor = VendorDetail.objects.get(vendor_id=request.user.id)
+            if has_vendor:
+                product = Product.objects.filter(user=request.user).get(pk=product_pk)
+                product.status = Product.DELETED
+                product.save()
+                messages.success(request, 'The Product was deleted!')
+                return redirect('/vendor/' + str(request.user.id))
+        except VendorDetail.DoesNotExist:
+            return render(request, 'userprofile/vendor_detail_form.html')
     else:
         return render(request, 'registration/sellerlogin.html')
 

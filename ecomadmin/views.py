@@ -129,6 +129,7 @@ class VendorUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
     success_url = reverse_lazy('dashboard:vendor')
 
     def form_invalid(self, form):
+        print(form.errors)
         return self.render_to_response(self.get_context_data(form=form))
 
 
