@@ -114,6 +114,7 @@ def seller(request, *args, **kwargs):
                         return render(request, 'userprofile/seller.html', {
                             'products': products,
                             'order_items': order_items,
+                            'has_vendor': has_vendor
                         })
                 except VendorDetail.DoesNotExist:
                     return render(request, 'userprofile/vendor_detail_form.html')

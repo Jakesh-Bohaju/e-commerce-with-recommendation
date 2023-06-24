@@ -47,10 +47,11 @@
 
     {% endfor %}
     <hr>
-
-    <a href="{% url 'add_product' request.user.id %}"
-       class="mt-6 inline-block py-2 px-4 bg-green-800 text-white rounded-xl">Add
-        Product</a><br>
+    {% if has_vendor.verify_status %}
+        <a href="{% url 'add_product' request.user.id %}"
+           class="mt-6 inline-block py-2 px-4 bg-green-800 text-white rounded-xl">Add
+            Product</a><br>
+    {% endif %}
     <h2 class="mt-16 text-xl bg-green-800 text-white rounded-xl px-4 py-2">My Products</h2>
 
     {% if products %}
