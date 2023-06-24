@@ -9,8 +9,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, ListView, DeleteView, UpdateView
 
 from ecomadmin.forms import CategoryForm
-from store.models import Category, Product, Order, OrderItem
-from vendor.models import VendorDetail
+from store.models import Category, Product, Order, OrderItem, Review
+from vendor.models import VendorDetail, EcommerceUser
 import operator
 
 
@@ -136,6 +136,30 @@ class VendorUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
 class VendorDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = VendorDetail
     success_url = reverse_lazy('dashboard:vendor')
+
+
+class CustomerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = "customer.html"
+    model = OrderItem
+
+    # context_object_name = "customers"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        customers_data = []
+        # data = {}
+        customers = EcommerceUser.objects.filter(is_superuser=False, is_vendor=False)
+        for customer in customers:
+            order_count = Order.objects.filter(created_by_id=customer.id).count()
+            product_count = OrderItem.objects.filter(created_by_id=customer.id).count()
+            total_buy = OrderItem.objects.filter(created_by_id=customer.id).aggregate(Sum('price'))
+            review_count = Review.objects.filter(created_by_id=customer.id).count()
+            total_buy = total_buy['price__sum']
+            data = [customer.username, order_count, product_count, total_buy, review_count]
+            customers_data.append(data)
+        print(customers_data)
+        context['customers'] = customers_data
+        return context
 
 
 class OrderView(LoginRequiredMixin, AdminRequiredMixin, ListView):

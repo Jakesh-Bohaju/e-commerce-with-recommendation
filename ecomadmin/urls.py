@@ -19,7 +19,11 @@ urlpatterns = [
     path('vendor', VendorView.as_view(), name="vendor"),
     path('update/vendor/<int:pk>', VendorUpdateFormView.as_view(), name="vendor_update_form"),
     path('delete/vendor/<int:pk>/', VendorDeleteView.as_view(), name='delete_vendor'),
-    #
+
+
+    # # vendor R (Read)
+    path('customer', CustomerView.as_view(), name="customer"),
+
     # order RUD (Read, Update, Delete)
     path('order', OrderView.as_view(), name="order"),
     path('update/order/<int:pk>', OrderUpdateFormView.as_view(), name="order_update_form"),
