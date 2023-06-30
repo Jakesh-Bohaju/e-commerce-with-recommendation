@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'vendor',
     'store',
     'ecomadmin',
+    'recommendation',
 ]
 
 MIDDLEWARE = [
