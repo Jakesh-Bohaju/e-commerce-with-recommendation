@@ -165,18 +165,6 @@ def category_detail(request, slug):
 
 def product_detail(request, category_slug, slug):
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
-    review = Review.objects.filter(product_id=product.id)
-    con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
-    if not hyb_pid == None:
-        recommended_products = Product.objects.filter(id__in=hyb_pid[:6])[1:]
-    elif not coll_pid == None:
-        recommended_products = Product.objects.filter(id__in=coll_pid[:6])[1:]
-    else:
-        recommended_products = Product.objects.filter(id__in=con_pid[:6])[1:]
-    # return render(request, 'store/product_detail.html', {
-    #     'product': product,
-    #     'recommended_products': recommended_products
-    # })
 
     if request.method == 'POST':
         rating = request.POST.get('rating', 3)
@@ -195,6 +183,16 @@ def product_detail(request, category_slug, slug):
                     content=content,
                     created_by=request.user
                 )
+
+    review = Review.objects.filter(product_id=product.id)
+    con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
+    if not hyb_pid == None:
+        hyb_pid = hyb_pid[1:6]
+        recommended_products = Product.objects.filter(id__in=hyb_pid[1:6])
+    elif not coll_pid == None:
+        recommended_products = Product.objects.filter(id__in=coll_pid[1:6])
+    else:
+        recommended_products = Product.objects.filter(id__in=con_pid[1:6])
 
     return render(request, 'store/product_detail.html', {
         'product': product,
