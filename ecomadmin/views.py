@@ -72,7 +72,6 @@ class AdminView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
             context['top_10_vendor_transaction_data'] = final_top_10_vendor_transaction_data
         except Exception as e:
             pass
-        data_collection(self.request)
         return context
 
 

@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
+from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
 from .cart import Cart
 from .forms import OrderForm
@@ -163,7 +164,23 @@ def category_detail(request, slug):
 
 
 def product_detail(request, category_slug, slug):
-    product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
+    try:
+        product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
+        con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
+        if hyb_pid:
+            recommended_products = Product.objects.filter(id__in=hyb_pid)[1:]
+        elif coll_pid:
+            recommended_products = Product.objects.filter(id__in=coll_pid)[1:]
+        else:
+            recommended_products = Product.objects.filter(id__in=con_pid)[1:]
+
+        print(recommended_products)
+        return render(request, 'store/product_detail.html', {
+            'product': product,
+            'recommended_products': recommended_products
+        })
+    except:
+        pass
 
     if request.method == 'POST':
         rating = request.POST.get('rating', 3)
