@@ -6,5 +6,5 @@ register = template.Library()
 
 @register.inclusion_tag('core/menu.html')
 def menu():
-    categories = Category.objects.all()
+    categories = Category.objects.all().order_by('?')
     return {'categories': categories}

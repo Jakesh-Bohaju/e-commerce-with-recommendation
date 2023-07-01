@@ -14,7 +14,7 @@
                         <a href="{% url 'product_detail' product.category.slug product.slug %}">
 
                             <div class="image mb-2">
-                                <img src="{{ product.get_thumbnail }}" alt="Image of {{ product.title }}">
+                                <img src="{{ product.image.url }}" alt="Image of {{ product.title }}">
 
                             </div>
 
