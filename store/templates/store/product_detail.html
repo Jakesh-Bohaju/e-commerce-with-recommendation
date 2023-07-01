@@ -57,7 +57,7 @@
                 </div>
             </form>
         {% endif %}
-        {% for review in product.reviews.all %}
+        {% for review in reviews %}
             <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">
                 <strong></strong>{{ review.created_by }}<br>
                 <strong>Rating: </strong>{{ review.rating }}/5<br>
@@ -68,5 +68,13 @@
             </div>
         {% endfor %}
     </div>
-    </a>
+    <h4>Recommend Products</h4>
+    {% for recommended_product in recommended_products %}
+        <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">
+            {{ recommended_product.title }}
+            <img src="{{ recommended_product.image.url }}" alt="Image of {{ recommended_product.title }}" style="height: 100px; width: 100px">
+            {{ recommended_product.price }}
+
+        </div>
+    {% endfor %}
 {% endblock %}

@@ -293,21 +293,28 @@ def collaborative_based_filtering(request, product_id):
     df_new_pvt_matrix = csr_matrix(df_new_pvt.values)
     model_knn = NearestNeighbors(metric='cosine', algorithm='brute')
     model_knn.fit(df_new_pvt_matrix)
-    distances, indices = model_knn.kneighbors(df_new_pvt.iloc[product_id, :].values.reshape(1, -1), n_neighbors=10)
-    distance_value = distances[0]
-    pid_array = [i for i in indices]
-    pid = pid_array[0]
-
-    data_tuples = list(zip(pid, distance_value))
-    coll_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'distance'])
-    return pid, coll_recm_df
+    try:
+        distances, indices = model_knn.kneighbors(df_new_pvt.iloc[product_id, :].values.reshape(1, -1), n_neighbors=10)
+        distance_value = distances[0]
+        pid_array = [i for i in indices]
+        pid = pid_array[0].tolist()
+        data_tuples = list(zip(pid, distance_value))
+        coll_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'distance'])
+        return pid, coll_recm_df
+    except:
+        pid = None
+        coll_recm_df = None
+        return pid, coll_recm_df
 
 
 # combine content and collaborative based filtering
 def hybrid_recommendation(request, product_id):
     con_pid, con_pid_df = content_based_filtering(request, product_id)
     coll_pid, coll_pid_df = collaborative_based_filtering(request, product_id)
-    hybrid_df = pd.merge(con_pid_df, coll_pid_df, on="product_id", how="left").dropna()
-    hybrid_df['mean_value'] = hybrid_df.mean(axis=1)
-    hybrid_df = hybrid_df.sort_values(by=['mean_value'])
-    return con_pid, coll_pid, hybrid_df['product_id'].tolist()
+    hybrid_df = None
+    if coll_pid:
+        hybrid_df = pd.merge(con_pid_df, coll_pid_df, on="product_id", how="left").dropna()
+        hybrid_df['mean_value'] = hybrid_df.mean(axis=1)
+        hybrid_df = hybrid_df.sort_values(by=['mean_value'])
+        hybrid_df = hybrid_df['product_id'].tolist()
+    return con_pid, coll_pid, hybrid_df
