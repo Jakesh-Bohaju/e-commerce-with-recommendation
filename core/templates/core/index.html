@@ -1,598 +1,193 @@
+{% extends '_frontend.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
-    <!-- Google Fonts Roboto -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-    <!-- MDB -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.20.0/css/mdb.min.css" />
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-</head>
-<body>
-    <!--Main Navigation-->
-<header>
-  <!-- Jumbotron -->
-  <div class="p-3 text-center bg-white border-bottom">
-    <div class="container">
-      <div class="row gy-3">
-        <!-- Left elements -->
-        <div class="col-lg-2 col-sm-4 col-4">
-          <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
-          </a>
-        </div>
-        <!-- Left elements -->
+{% block frontend_content %}
+    <main class="main">
+        <div class="intro-section pt-3 pb-3 mb-2">
+            <div class="container">
+                <div class="row">
+                    <!-- Slider -->
+                    <div class="col-lg-8">
+                        <div class="intro-slider-container slider-container-ratio mb-2 mb-lg-0">
+                            <div class="intro-slider owl-carousel owl-simple owl-dark owl-nav-inside" data-toggle="owl"
+                                 data-owl-options='{
+                                        "nav": false,
+                                        "dots": true,
+                                        "responsive": {
+                                            "768": {
+                                                "nav": true,
+                                                "dots": false
+                                            }
+                                        }
+                                    }'>
+                                <div class="intro-slide">
+                                    <figure class="slide-image">
+                                        <picture>
+                                            <source media="(max-width: 480px)"
+                                                    srcset="assets/images/demos/demo-3/slider/slide-1-480w.jpg">
+                                            <img src="assets/images/demos/demo-3/slider/slide-1.jpg" alt="Image Desc">
+                                        </picture>
+                                    </figure><!-- End .slide-image -->
 
-        <!-- Center elements -->
-        <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-          <div class="d-flex float-end">
-            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Sign in</p> </a>
-            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a>
-            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </a>
-          </div>
-        </div>
-        <!-- Center elements -->
+                                    <div class="intro-content">
+                                        <h3 class="intro-subtitle text-primary">Daily Deals</h3>
+                                        <!-- End .h3 intro-subtitle -->
+                                        <h1 class="intro-title">
+                                            AirPods <br>Earphones
+                                        </h1><!-- End .intro-title -->
 
-        <!-- Right elements -->
-        <div class="col-lg-5 col-md-12 col-12">
-          <div class="input-group float-center">
-            <div class="form-outline">
-              <input type="search" id="form1" class="form-control" />
-              <label class="form-label" for="form1">Search</label>
-            </div>
-            <button type="button" class="btn btn-primary shadow-0">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </div>
-        <!-- Right elements -->
-      </div>
-    </div>
-  </div>
-  <!-- Jumbotron -->
+                                        <div class="intro-price">
+                                            <sup>Today:</sup>
+                                            <span class="text-primary">
+                                                    $247<sup>.99</sup>
+                                                </span>
+                                        </div><!-- End .intro-price -->
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Toggle button -->
-      <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarLeftAlignExample" aria-controls="navbarLeftAlignExample" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
+                                        <a href="category.html" class="btn btn-primary btn-round">
+                                            <span>Click Here</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </a>
+                                    </div><!-- End .intro-content -->
+                                </div><!-- End .intro-slide -->
 
-      <!-- Collapsible wrapper -->
-      <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
-        <!-- Left links -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Categories</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Hot offers</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Gift boxes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Menu item</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Menu name</a>
-          </li>
-          <!-- Navbar dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-              Others
-            </a>
-            <!-- Dropdown menu -->
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <a class="dropdown-item" href="#">Action</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Another action</a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <!-- Left links -->
-      </div>
-    </div>
-    <!-- Container wrapper -->
-  </nav>
-  <!-- Navbar -->
-</header>
+                                <div class="intro-slide">
+                                    <figure class="slide-image">
+                                        <picture>
+                                            <source media="(max-width: 480px)"
+                                                    srcset="assets/images/demos/demo-3/slider/slide-2-480w.jpg">
+                                            <img src="assets/images/demos/demo-3/slider/slide-2.jpg" alt="Image Desc">
+                                        </picture>
+                                    </figure><!-- End .slide-image -->
 
-<!--  intro  -->
-<section class="mt-3">
-  <div class="container">
-    <main class="card p-3 shadow-2-strong">
-      <div class="row">
-        <div class="col-lg-3">
-          <nav class="nav flex-column nav-pills mb-md-2">
-            <a class="nav-link active py-2 ps-3 my-0" aria-current="page" href="#">Electronics</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Clothes and wear</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Home interiors</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Computer and tech</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Tools, equipments</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Sports and outdoor</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Animal and pets</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Machinery tools</a>
-            <a class="nav-link my-0 py-2 ps-3 bg-white" href="#">Other products</a>
-          </nav>
-        </div>
-        <div class="col-lg-9">
-          <div class="card-banner h-auto p-5 bg-primary rounded-5" style="height: 350px;">
-            <div>
-              <h2 class="text-white">
-                Great products with <br />
-                best deals
-              </h2>
-              <p class="text-white">No matter how far along you are in your sophistication as an amateur astronomer, there is always one.</p>
-              <a href="#" class="btn btn-light shadow-0 text-primary"> View more </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-  <!-- container end.// -->
-</section>
-<!-- intro -->
+                                    <div class="intro-content">
+                                        <h3 class="intro-subtitle text-primary">Deals and Promotions</h3>
+                                        <!-- End .h3 intro-subtitle -->
+                                        <h1 class="intro-title">
+                                            Echo Dot <br>3rd Gen
+                                        </h1><!-- End .intro-title -->
 
-<!-- Products -->
-<section>
-  <div class="container my-5">
-    <header class="mb-4">
-      <h3>New products</h3>
-    </header>
+                                        <div class="intro-price">
+                                            <sup class="intro-old-price">$49,99</sup>
+                                            <span class="text-primary">
+                                                    $29<sup>.99</sup>
+                                                </span>
+                                        </div><!-- End .intro-price -->
 
-    <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap">
-            <div class="mask" style="height: 50px;">
-              <div class="d-flex justify-content-start align-items-start h-100 m-2">
-                <h6><span class="badge bg-success pt-2">Offer</span></h6>
-              </div>
-            </div>
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/12.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-3">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">GoPro action camera 4K</p>
-            <p class="text-muted">
-              Model: X-200
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/11.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$590.00</h5>
-            <p class="card-text mb-0">Canon EOS professional</p>
-            <p class="text-muted">
-              Capacity: 128GB
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/10.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">Modern product name here</p>
-            <p class="text-muted">
-              Sizes: S, M, XL
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/9.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$1099.00</h5>
-            <p class="card-text mb-0">Apple iPhone 13 Pro max</p>
-            <p class="text-muted">
-              Color: Black, Memory: 128GB
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">Modern product name here</p>
-            <p class="text-muted">
-              Sizes: S, M, XL
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/6.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">Modern product name here</p>
-            <p class="text-muted">
-              Model: X-200
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/7.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">Modern product name here</p>
-            <p class="text-muted">
-              Sizes: S, M, XL
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card my-2 shadow-0">
-          <a href="#" class="img-wrap"> 
-            <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/8.webp" class="card-img-top" style="aspect-ratio: 1 / 1"> 
-          </a>
-          <div class="card-body p-0 pt-2">
-            <a href="#!" class="btn btn-light border px-2 pt-2 float-end icon-hover"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-            <h5 class="card-title">$29.95</h5>
-            <p class="card-text mb-0">Modern product name here</p>
-            <p class="text-muted">
-              Material: Jeans
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- Products -->
+                                        <a href="category.html" class="btn btn-primary btn-round">
+                                            <span>Click Here</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </a>
+                                    </div><!-- End .intro-content -->
+                                </div><!-- End .intro-slide -->
+                            </div><!-- End .intro-slider owl-carousel owl-simple -->
 
-<!-- Feature -->
-<section class="">
-  <div class="container">
-    <div class="row gy-4">
-      <div class="col-lg-6">
-        <div class="card-banner bg-gray h-100" style="
-                                                      min-height: 200px;
-                                                      background-size: cover;
-                                                      background-position: center;
-                                                      width: 100%;
-                                                      background-repeat: no-repeat;
-                                                      top: 50%;
-                                                      background-image: url('https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/banners/banner-item2.webp');">
-          <div class="p-3 p-lg-5" style="max-width: 70%;">
-            <h3 class="text-dark">Best products & brands in our store at 80% off</h3>
-            <p>That's true but not always</p>
-            <button class="btn btn-warning shadow-0" href="#"> Claim offer </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="row mb-3 mb-sm-4 g-3 g-sm-4">
-          <div class="col-6 d-flex">
-            <div class="card w-100 bg-primary" style="min-height: 200px;">
-              <div class="card-body">
-                <h5 class="text-white">Gaming toolset</h5>
-                <p class="text-white-50">Technology for cyber sport</p>
-                <a class="btn btn-outline-light btn-sm" href="#">Learn more</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-6 d-flex">
-            <div class="card w-100 bg-primary" style="min-height: 200px;">
-              <div class="card-body">
-                <h5 class="text-white">Quality sound</h5>
-                <p class="text-white-50">All you need for music</p>
-                <a class="btn btn-outline-light btn-sm" href="#">Learn more</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- row.// -->
+                            <span class="slider-loader"></span><!-- End .slider-loader -->
+                        </div><!-- End .intro-slider-container -->
+                    </div><!-- End .col-lg-8 -->
+                    <!-- Popular Products -->
+                    <div class="col-lg-4">
+                        <h4>Popular Product</h4>
+                        <div class="intro-banners">
+                            {% for popular_product in popular_products %}
+                                <div class="banner mb-lg-1 mb-xl-2">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="banner-content">
+                                                <!-- End .banner-subtitle -->
+                                                <h4 class="banner-subtitle d-lg-none d-xl-block">{{ popular_product.category.title }}
+                                                </h4><!-- End .banner-subtitle -->
+                                                <h3 class="banner-title"><a
+                                                        href="{% url 'product_detail' popular_product.category.slug popular_product.slug %}">{{ popular_product.title|truncatewords:5 }}</a>
+                                                </h3>
+                                                <!-- End .banner-title -->
+                                                <a href="{% url 'product_detail' popular_product.category.slug popular_product.slug %}"
+                                                   class="banner-link">Shop Now<i
+                                                        class="icon-long-arrow-right"></i></a>
+                                            </div><!-- End .banner-content -->
+                                        </div>
+                                        <div class="col-4">
+                                            <a href="{% url 'product_detail' popular_product.category.slug popular_product.slug %}">
+                                                <img src="{{ popular_product.image.url }}"
+                                                     alt="Image of {{ popular_product.title }}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div><!-- End .banner -->
+                            {% endfor %}
+                        </div><!-- End .intro-banners -->
 
-        <div class="card bg-success" style="min-height: 200px;">
-          <div class="card-body">
-            <h5 class="text-white">Buy 2 items, With special gift</h5>
-            <p class="text-white-50" style="max-width: 400px;">Buy one, get one free marketing strategy helps your business improves the brand by sharing the profits</p>
-            <a class="btn btn-outline-light btn-sm" href="#">Learn more</a>
-          </div>
-        </div>
-      </div>
-      <!-- col.// -->
-    </div>
-    <!-- row.// -->
-  </div>
-  <!-- container end.// -->
-</section>
-<!-- Feature -->
+                    </div><!-- End .col-lg-4 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .intro-section -->
 
-<!-- Recently viewed -->
-<section class="mt-5 mb-4">
-  <div class="container text-dark">
-    <header class="">
-      <h3 class="section-title">Recently viewed</h3>
-    </header>
+        <hr>
+        <div class="container top">
+            <div class="heading heading-flex mb-3">
+                <div class="heading-left">
+                    <h2 class="title"></h2><!-- End .title -->
+                </div><!-- End .heading-left -->
 
-    <div class="row gy-3">
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/1.webp" />
-        </a>
-      </div>
-      <!-- col.// -->
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/2.webp" />
-        </a>
-      </div>
-      <!-- col.// -->
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/3.webp" />
-        </a>
-      </div>
-      <!-- col.// -->
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/4.webp" />
-        </a>
-      </div>
-      <!-- col.// -->
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/5.webp" />
-        </a>
-      </div>
-      <!-- col.// -->
-      <div class="col-lg-2 col-md-4 col-4">
-        <a href="#" class="img-wrap">
-          <img height="200" width="200" class="img-thumbnail" src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/6.webp" />
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- Recently viewed -->
+            </div><!-- End .heading -->
 
-<section>
-  <div class="container">
-    <div class="px-4 pt-3 border">
-      <div class="row pt-1">
-        <div class="col-lg-3 col-md-6 mb-3 d-flex">
-          <div class="d-flex align-items-center">
-            <div class="badge badge-warning p-2 rounded-4 me-3">
-              <i class="fas fa-thumbs-up fa-2x fa-fw"></i>
-            </div>
-            <span class="info">
-              <h6 class="title">Reasonable prices</h6>
-              <p class="mb-0">Have you ever finally just</p>
-            </span>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3 d-flex">
-          <div class="d-flex align-items-center">
-            <div class="badge badge-warning p-2 rounded-4 me-3">
-              <i class="fas fa-plane fa-2x fa-fw"></i>
-            </div>
-            <span class="info">
-              <h6 class="title">Worldwide shipping</h6>
-              <p class="mb-0">Have you ever finally just</p>
-            </span>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3 d-flex">
-          <div class="d-flex align-items-center">
-            <div class="badge badge-warning p-2 rounded-4 me-3">
-              <i class="fas fa-star fa-2x fa-fw"></i>
-            </div>
-            <span class="info">
-              <h6 class="title">Best ratings</h6>
-              <p class="mb-0">Have you ever finally just</p>
-            </span>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3 d-flex">
-          <div class="d-flex align-items-center">
-            <div class="badge badge-warning p-2 rounded-4 me-3">
-              <i class="fas fa-phone-alt fa-2x fa-fw"></i>
-            </div>
-            <span class="info">
-              <h6 class="title">Help center</h6>
-              <p class="mb-0">Have you ever finally just</p>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="products">
+                <div class="row">
+                    <!-- Product List -->
+                    {% for product in  products %}
+                        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div class="product">
+                                <figure class="product-media">
+                                    {% if product.image %}
+                                        <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                            <img src="{{ product.image.url }}" alt="Image of {{ product.title }}"
+                                                 class="product-image">
+                                        </a>
+                                    {% endif %}
+
+                                    {#                                    <div class="product-action-vertical">#}
+                                    {#                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>#}
+                                    {#                                    </div><!-- End .product-action -->#}
+
+                                    <div class="product-action action-icon-top">
+                                        {% if not request.user.is_superuser and not request.user.is_vendor %}
+                                            <a href="{% url 'add_to_cart' product.id %}"
+                                               class="btn-product btn-cart"><span>add to cart</span></a>
+                                        {% endif %}
+                                        <a href="popup/quickView.html" class="btn-product btn-quickview"
+                                           title="Quick view"><span>quick view</span></a>
+                                        {#                                        <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>#}
+                                    </div><!-- End .product-action -->
+                                </figure><!-- End .product-media -->
+
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <a href="#">Women</a>
+                                    </div><!-- End .product-cat -->
+                                    <h3 class="product-title"><a
+                                            href="{% url 'product_detail' product.category.slug product.slug %}">
+                                        {{ product.title }}</a></h3>
+                                    <!-- End .product-title -->
+                                    <div class="product-price">
+                                        Rs. {{ product.price }}                                    </div>
+                                    <!-- End .product-price -->
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <span class="ratings-text">( 0 Reviews )</span>
+                                    </div><!-- End .rating-container -->
 
 
-<!-- Footer -->
-<footer class="text-center text-lg-start text-muted bg-primary mt-3">
-  <!-- Section: Links  -->
-  <section class="">
-    <div class="container text-center text-md-start pt-4 pb-4">
-      <!-- Grid row -->
-      <div class="row mt-3">
-        <!-- Grid column -->
-        <div class="col-12 col-lg-3 col-sm-12 mb-2">
-          <!-- Content -->
-          <a href="https://mdbootstrap.com/" target="_blank" class="text-white h2">
-            MDB
-          </a>
-          <p class="mt-1 text-white">
-            © 2023 Copyright: MDBootstrap.com
-          </p>
-        </div>
-        <!-- Grid column -->
+                                </div><!-- End .product-body -->
+                            </div><!-- End .product -->
+                        </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                    {% endfor %}
+                </div><!-- End .row -->
 
-        <!-- Grid column -->
-        <div class="col-6 col-sm-4 col-lg-2">
-          <!-- Links -->
-          <h6 class="text-uppercase text-white fw-bold mb-2">
-            Store
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">About us</a></li>
-            <li><a class="text-white-50" href="#">Find store</a></li>
-            <li><a class="text-white-50" href="#">Categories</a></li>
-            <li><a class="text-white-50" href="#">Blogs</a></li>
-          </ul>
-        </div>
-        <!-- Grid column -->
+                <div class="load-more-container text-center">
+                    <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
+                </div><!-- End .load-more-container -->
+            </div><!-- End .products -->            </div><!-- End .container -->
+    </main><!-- End .main -->
 
-        <!-- Grid column -->
-        <div class="col-6 col-sm-4 col-lg-2">
-          <!-- Links -->
-          <h6 class="text-uppercase text-white fw-bold mb-2">
-            Information
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">Help center</a></li>
-            <li><a class="text-white-50" href="#">Money refund</a></li>
-            <li><a class="text-white-50" href="#">Shipping info</a></li>
-            <li><a class="text-white-50" href="#">Refunds</a></li>
-          </ul>
-        </div>
-        <!-- Grid column -->
 
-        <!-- Grid column -->
-        <div class="col-6 col-sm-4 col-lg-2">
-          <!-- Links -->
-          <h6 class="text-uppercase text-white fw-bold mb-2">
-            Support
-          </h6>
-          <ul class="list-unstyled mb-4">
-            <li><a class="text-white-50" href="#">Help center</a></li>
-            <li><a class="text-white-50" href="#">Documents</a></li>
-            <li><a class="text-white-50" href="#">Account restore</a></li>
-            <li><a class="text-white-50" href="#">My orders</a></li>
-          </ul>
-        </div>
-        <!-- Grid column -->
-
-        <!-- Grid column -->
-        <div class="col-12 col-sm-12 col-lg-3">
-          <!-- Links -->
-          <h6 class="text-uppercase text-white fw-bold mb-2">Newsletter</h6>
-          <p class="text-white">Stay in touch with latest updates about our products and offers</p>
-          <div class="input-group mb-3">
-            <input type="email" class="form-control border" placeholder="Email" aria-label="Email" aria-describedby="button-addon2" />
-            <button class="btn btn-light border shadow-0" type="button" id="button-addon2" data-mdb-ripple-color="dark">
-              Join
-            </button>
-          </div>
-        </div>
-        <!-- Grid column -->
-      </div>
-      <!-- Grid row -->
-    </div>
-  </section>
-  <!-- Section: Links  -->
-
-  <div class="">
-    <div class="container">
-      <div class="d-flex justify-content-between py-4 border-top">
-        <!--- payment --->
-        <div>
-          <i class="fab fa-lg fa-cc-visa text-white"></i>
-          <i class="fab fa-lg fa-cc-amex text-white"></i>
-          <i class="fab fa-lg fa-cc-mastercard text-white"></i>
-          <i class="fab fa-lg fa-cc-paypal text-white"></i>
-        </div>
-        <!--- payment --->
-
-        <!--- language selector --->
-        <div class="dropdown dropup">
-          <a class="dropdown-toggle text-white" href="#" id="Dropdown" role="button" data-mdb-toggle="dropdown" aria-expanded="false"> <i class="flag-united-kingdom flag m-0 me-1"></i>English </a>
-
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i class="fa fa-check text-success ms-2"></i></a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
-            </li>
-          </ul>
-        </div>
-        <!--- language selector --->
-      </div>
-    </div>
-  </div>
-</footer>
-<!-- Footer -->
-    <!-- MDB -->
-    <script type="text/javascript" src="js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="js/script.js"></script>
-</body>
-</html>
-
+{% endblock %}

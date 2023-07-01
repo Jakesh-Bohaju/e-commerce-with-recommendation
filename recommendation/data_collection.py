@@ -318,3 +318,13 @@ def hybrid_recommendation(request, product_id):
         hybrid_df = hybrid_df.sort_values(by=['mean_value'])
         hybrid_df = hybrid_df['product_id'].tolist()
     return con_pid, coll_pid, hybrid_df
+
+
+# Find out top 3 popular products
+def recommend_popularity_based(request):
+    df = pd.read_json(os.path.abspath("recommendation/dataset/product.json"), lines=True)
+    popularity = df.groupby('id').size().reset_index(name='popularity')
+    popularity = popularity.sort_values('popularity', ascending=False)
+    top_items = popularity.head(3)['id'].tolist()
+    products = Product.objects.filter(id__in=top_items)
+    return products

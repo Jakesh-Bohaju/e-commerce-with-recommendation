@@ -129,3 +129,16 @@ class Review(models.Model):
     content = models.TextField()
     created_by = models.ForeignKey(EcommerceUser, related_name='reviews_user', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class CustomerProfile(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    address = models.CharField(max_length=100)
+    mobileNo = models.CharField(max_length=10)
+    photo = models.ImageField(upload_to='Customer Profile')
+    user = models.ForeignKey(EcommerceUser, related_name="customer_detail", on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_by = models.ForeignKey(EcommerceUser, related_name="customer_detail_modified", on_delete=models.SET_NULL,
+                                    blank=True, null=True)
+    modified_date = models.DateTimeField(blank=True, auto_now=True)
