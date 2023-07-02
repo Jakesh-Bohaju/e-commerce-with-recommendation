@@ -1,33 +1,65 @@
-{% extends 'core/base.html' %}
+{% extends '_frontend.html' %}
 
 {% block title %}{{ category.title }}{% endblock %}
+{% load static %}
+{% block frontend_content %}
+    <div class="container-fluid">
+        <main class="main">
+            <div class="products">
+                <div class="row">
+                    <!-- Product List -->
+                    {% for product in  products %}
+                        <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                            <div class="product">
+                                <figure class="product-media">
+                                    {% if product.image %}
+                                        <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                            <img src="{{ product.image.url }}" alt="Image of {{ product.title }}"
+                                                 class="product-image">
+                                        </a>
+                                    {% endif %}
 
-{% block content %}
-    <h1 class="text-2xl">{{ category.title }}</h1>
-    {% for product in  products %}
-        <div class="product w-1/3 p-2">
-            <div class="p-4 bg-gray-100">
+                                    {#                                    <div class="product-action-vertical">#}
+                                    {#                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>#}
+                                    {#                                    </div><!-- End .product-action -->#}
 
-                {% if product.image %}
-                    <div class="image mb-2">
-                        <a href="{% url 'product_detail' product.category.slug product.slug %}"><img
-                                src="{{ product.image.url }}" alt="Image of {{ product.title }}"></a>
+                                    <div class="product-action action-icon-top">
+                                        {% if not request.user.is_superuser and not request.user.is_vendor %}
+                                            <a href="{% url 'add_to_cart' product.id %}"
+                                               class="btn-product btn-cart"><span>add to cart</span></a>
+                                        {% endif %}
+                                        <a href="popup/quickView.html" class="btn-product btn-quickview"
+                                           title="Quick view"><span>quick view</span></a>
+                                        {#                                        <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>#}
+                                    </div><!-- End .product-action -->
+                                </figure><!-- End .product-media -->
 
-                    </div>
-                {% endif %}
-                <h2 class="text-xl"><a
-                        href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.title }}</a>
-                </h2>
-                <p class="text-s text-gray-600">Rs.{{ product.price }}</p>
-                <hr class="mt-2 mb-2">
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <a href="#">Women</a>
+                                    </div><!-- End .product-cat -->
+                                    <h3 class="product-title"><a
+                                            href="{% url 'product_detail' product.category.slug product.slug %}">
+                                        {{ product.title }}</a></h3>
+                                    <!-- End .product-title -->
+                                    <div class="product-price">
+                                        Rs. {{ product.price }}                                    </div>
+                                    <!-- End .product-price -->
+                                    <div class="ratings-container">
+                                        <div class="ratings">
+                                            <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                        </div><!-- End .ratings -->
+                                        <span class="ratings-text">( 0 Reviews )</span>
+                                    </div><!-- End .rating-container -->
 
-                <a href="{% url 'add_to_cart' product.id %}" class="inline-block px-2 py-2  flex items-center ">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                        <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
 
-    {% endfor %}
+                                </div><!-- End .product-body -->
+                            </div><!-- End .product -->
+                        </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                    {% endfor %}
+                </div><!-- End .row -->
+
+            </div><!-- End .products -->
+        </main>
+    </div>
 {% endblock %}
