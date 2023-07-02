@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.views.generic import ListView
 
+from ecomadmin.models import About
 from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
 from .cart import Cart
@@ -203,6 +204,13 @@ def product_detail(request, category_slug, slug):
 
 
 class ProductListView(ListView):
-    template_name = "product_list.html"
+    template_name = "store/product_list.html"
     model = Product
+    queryset = Product.objects.filter(status='Active')
     context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
+
