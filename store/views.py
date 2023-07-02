@@ -99,9 +99,11 @@ def remove_from_cart(request, product_id):
 @login_required
 def cart_view(request):
     cart = Cart(request)
+    about = About.objects.all().first()
 
     return render(request, 'store/cart_view.html', {
-        'cart': cart
+        'cart': cart,
+        'about': about,
     })
 
 
