@@ -110,6 +110,7 @@ def cart_view(request):
 @login_required
 def checkout(request):
     cart = Cart(request)
+    about = About.objects.all().first()
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -144,6 +145,7 @@ def checkout(request):
     return render(request, 'store/checkout.html', {
         'cart': cart,
         'form': form,
+        'about': about,
     })
 
 
@@ -151,19 +153,24 @@ def search(request):
     query = request.GET.get('query', '')
     products = Product.objects.filter(status=Product.ACTIVE).filter(
         Q(title__icontains=query) | Q(description__icontains=query))
+    about = About.objects.all().first()
 
     return render(request, 'store/search.html', {
         'query': query,
         'products': products,
+        'about': about,
     })
 
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = category.products.filter(status=Product.ACTIVE)
+    about = About.objects.all().first()
+
     return render(request, 'store/category_detail.html', {
         'category': category,
         'products': products,
+        'about':about,
     })
 
 

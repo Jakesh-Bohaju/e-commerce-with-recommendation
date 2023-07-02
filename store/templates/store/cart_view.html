@@ -63,9 +63,49 @@
                                                 </td>
                                                 <td class="total-col text-dark total_cost">{{ cart.get_gross_total_cost|index:forloop.counter0 }}</td>
                                                 <td class="remove-col">
-                                                    <button class="btn-remove"><i class="icon-close"></i></button>
+                                                    <a class="button btn-remove"
+                                                       data-toggle="modal"
+                                                       data-target="#item{{ item.id }}remove">
+                                                        <i class="icon-close"></i>
+                                                    </a>
                                                 </td>
                                             </tr>
+
+                                            <div id="item{{ item.id }}remove" class="modal fade"
+                                                 role="dialog">
+                                                <div class="modal-dialog">
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" style="alignment: left">
+                                                                Remove {{ item.product.title }}</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                &times;
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body p-5">
+                                                            <p>Are you sure you want to remove
+                                                                "{{ item.product.title }}" from cart?</p><img
+                                                                alt="{{ item.product.title }}" src="{{ item.product.image.url }}"
+                                                                class="rounded mx-auto d-block"
+                                                                height="50" width="100">
+                                                            <div class="modal-del-fo">
+                                                                <form method="post"
+                                                                      action="{% url 'remove_from_cart' item.id %}" class="p-2">
+                                                                    {% csrf_token %}
+                                                                    <button value="Confirm" class="btn btn-info btn-sm">
+                                                                        Yes
+                                                                    </button>
+                                                                    <button class="btn btn-info btn-sm"
+                                                                            data-dismiss="modal">No
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         {% endfor %}
                                         </tbody>
                                     </table><!-- End .table table-wishlist -->
@@ -109,7 +149,8 @@
                                             <table class="table table-summary">
                                                 <tr class="summary-subtotal">
                                                     <th class="text-dark"><b>Net Total</b></th>
-                                                    <td class="text-dark">Rs. <em><b>{{ cart.get_total_cost|add:100 }}</b></em></td>
+                                                    <td class="text-dark">Rs.
+                                                        <em><b>{{ cart.get_total_cost|add:100 }}</b></em></td>
                                                 </tr>
                                             </table>
                                         </div>
