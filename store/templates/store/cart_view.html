@@ -40,7 +40,7 @@
                                                     <div class="product">
                                                         <figure class="product-media">
                                                             <a href="{% url 'product_detail' item.product.category.slug item.product.slug %}">
-                                                                <img src="{{ item.product.get_thumbnail }}"
+                                                                <img src="{{ item.product.image.url }}"
                                                                      alt="Product image">
                                                             </a>
                                                         </figure>
