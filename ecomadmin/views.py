@@ -8,7 +8,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, TemplateView, ListView, DeleteView, UpdateView
 
-from ecomadmin.forms import CategoryForm
+from ecomadmin.forms import CategoryForm, BannerForm
+from ecomadmin.models import Banner
 from recommendation.data_collection import *
 from store.models import Category, Product, Order, OrderItem, Review
 from vendor.models import VendorDetail, EcommerceUser
@@ -228,3 +229,26 @@ class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
         context['transaction_list'] = transaction_dict
 
         return context
+
+
+class BannerFormView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    template_name = "forms/banner_form.html"
+    form_class = BannerForm
+    model = Banner
+    success_url = reverse_lazy('dashboard:banner')
+
+    def form_invalid(self, form):
+        return render(self.request, 'forms/banner_form.html', {
+            'form': form,
+        })
+
+
+class BannerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = "banner.html"
+    model = Banner
+    context_object_name = "banners"
+
+
+class BannerDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = Banner
+    success_url = reverse_lazy('dashboard:banner')

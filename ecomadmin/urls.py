@@ -20,7 +20,6 @@ urlpatterns = [
     path('update/vendor/<int:pk>', VendorUpdateFormView.as_view(), name="vendor_update_form"),
     path('delete/vendor/<int:pk>/', VendorDeleteView.as_view(), name='delete_vendor'),
 
-
     # # vendor R (Read)
     path('customer', CustomerView.as_view(), name="customer"),
 
@@ -36,4 +35,9 @@ urlpatterns = [
 
     # # transaction RD (Read, Delete)
     path('transaction', TransactionView.as_view(), name="transaction"),
+
+    # banner CRD (Create, Read, Delete)
+    path('insert/banner', BannerFormView.as_view(), name="banner_form"),
+    path('banner', BannerView.as_view(), name="banner"),
+    path('delete/banner/<int:pk>/', BannerDeleteView.as_view(), name='delete_banner'),
 ]
