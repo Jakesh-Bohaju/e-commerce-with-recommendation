@@ -1,6 +1,6 @@
 from django import forms
 
-from ecomadmin.models import Banner
+from ecomadmin.models import Banner, About
 from store.models import Category, OrderItem
 
 
@@ -17,4 +17,12 @@ class BannerForm(forms.ModelForm):
         model = Banner
         fields = [
             'title', 'caption', 'image', 'weight'
+        ]
+
+
+class AboutForm(forms.ModelForm):
+    class Meta:
+        model = About
+        fields = [
+            'title', 'description', 'logo', 'photo', 'phoneNo', 'mobileNo', 'address'
         ]

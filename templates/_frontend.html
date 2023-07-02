@@ -27,14 +27,14 @@
         <div class="header-top">
             <div class="container">
                 <div class="header-left">
-                    <a href="tel:#"><i class="icon-phone"></i>Call: +977 01 5500000</a>
+                    <a href="tel:#"><i class="icon-phone"></i>Call: +977 {{ about.phoneNo }}</a>
                 </div><!-- End .header-left -->
 
                 <div class="header-right">
 
                     <ul class="top-menu">
                         <li>
-                            <a href="#">Links</a>
+{#                            <a href="#">Links</a>#}
                             <ul>
                                 <li>
                                     <a href="#">Chat with Us</a>
@@ -59,8 +59,8 @@
                         <i class="icon-bars"></i>
                     </button>
 
-                    <a href="index.html" class="logo">
-                        <img src="assets/images/demos/demo-3/logo.png" alt="Molla Logo" width="105" height="25">
+                    <a href="{% url 'frontpage' %}" class="logo">
+                        <img src="{{ about.logo.url }}" alt="{{  about.title }}" width="20%" height="20">
                     </a>
                 </div><!-- End .header-left -->
                 <div class="header-center">
@@ -245,14 +245,14 @@
                 <div class="row">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget widget-about">
-                            <img src="assets/images/demos/demo-3/logo-footer.png" class="footer-logo" alt="Footer Logo"
-                                 width="105" height="25">
-                            <p>AAma Sansar, the leading digital e-commerce service provider of Nepal.</p>
+                            <img src="{{ about.logo.url }}" class="footer-logo" alt="{{ about.title}}"
+                                 width="80%" height="50%">
+                            <p>{{ about.description | truncatewords:15 }}</p>
 
                             <div class="widget-call">
                                 <i class="icon-phone"></i>
                                 Got Question? Call us 24/7
-                                <a class="text-light" href="tel:#">+977 01 5500000</a>
+                                <a class="text-light" href="tel:#">+977 {{ about.phoneNo}}</a>
                             </div><!-- End .widget-call -->
                         </div><!-- End .widget about-widget -->
                     </div><!-- End .col-sm-6 col-lg-3 -->

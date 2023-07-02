@@ -40,4 +40,9 @@ urlpatterns = [
     path('insert/banner', BannerFormView.as_view(), name="banner_form"),
     path('banner', BannerView.as_view(), name="banner"),
     path('delete/banner/<int:pk>/', BannerDeleteView.as_view(), name='delete_banner'),
+
+    # about CRU (Create, Read, Update)
+    path('insert/about-us', AboutUsFormView.as_view(), name="about_us_form"),
+    path('about-us/', AboutUsView.as_view(), name="about_us"),
+    path('update/about-us/<int:pk>/', AboutUsUpdateFormView.as_view(), name='about_us_update_form'),
 ]

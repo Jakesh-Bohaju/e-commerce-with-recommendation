@@ -17,7 +17,7 @@ class About(models.Model):
     logo = models.ImageField(blank=True, null=True, upload_to="AboutUs")
     photo = models.ImageField(blank=True, null=True, upload_to="AboutUs")
     phoneNo = models.CharField(max_length=9)
-    mobileNo = models.CharField(max_length=10)
+    mobileNo = models.CharField(max_length=10, blank=True, null=True)
     address = models.CharField(max_length=100)
     slug = models.SlugField()
 

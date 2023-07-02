@@ -6,10 +6,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Sum
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, ListView, DeleteView, UpdateView
+from django.views.generic import CreateView, TemplateView, ListView, DeleteView, UpdateView, DetailView
 
-from ecomadmin.forms import CategoryForm, BannerForm
-from ecomadmin.models import Banner
+from ecomadmin.forms import CategoryForm, BannerForm, AboutForm
+from ecomadmin.models import Banner, About
 from recommendation.data_collection import *
 from store.models import Category, Product, Order, OrderItem, Review
 from vendor.models import VendorDetail, EcommerceUser
@@ -30,6 +30,7 @@ class AdminView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         try:
             context['product_count'] = Product.objects.all().count()
+            context['about'] = About.objects.all().first()
             vendor_count = VendorDetail.objects.all().count()
             context['vendor_count'] = vendor_count
             un_verified_vendor_count = VendorDetail.objects.filter(verify_status=False).count()
@@ -93,6 +94,11 @@ class CategoryView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     model = Category
     context_object_name = "categories"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
+
 
 class CategoryDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Category
@@ -104,6 +110,11 @@ class ProductView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     model = Product
     context_object_name = "products"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
+
 
 class ProductDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Product
@@ -114,12 +125,11 @@ class VendorView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     template_name = "vendor.html"
     model = VendorDetail
 
-    # context_object_name = "vendors"
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['verified_vendors'] = VendorDetail.objects.filter(verify_status=True)
         context['un_verified_vendors'] = VendorDetail.objects.filter(verify_status=False)
+        context['about'] = About.objects.all().first()
         return context
 
 
@@ -158,7 +168,7 @@ class CustomerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
             total_buy = total_buy['price__sum']
             data = [customer.username, order_count, product_count, total_buy, review_count]
             customers_data.append(data)
-        print(customers_data)
+        context['about'] = About.objects.all().first()
         context['customers'] = customers_data
         return context
 
@@ -167,6 +177,11 @@ class OrderView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     template_name = "order.html"
     model = Order
     context_object_name = "orders"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
 
 
 class OrderUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
@@ -188,6 +203,11 @@ class TrackingView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     template_name = "tracking.html"
     model = OrderItem
     context_object_name = "order_items"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
 
 
 class TrackingUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
@@ -227,7 +247,7 @@ class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
             transaction_dict[vendor_name] = total_amount[
                 'total']
         context['transaction_list'] = transaction_dict
-
+        context['about'] = About.objects.all().first()
         return context
 
 
@@ -248,7 +268,44 @@ class BannerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
     model = Banner
     context_object_name = "banners"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
+
 
 class BannerDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Banner
     success_url = reverse_lazy('dashboard:banner')
+
+
+class AboutUsFormView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    template_name = "forms/about_us_form.html"
+    form_class = AboutForm
+    model = About
+    success_url = reverse_lazy('dashboard:about_us')
+
+    def form_invalid(self, form):
+        return render(self.request, 'forms/about_us_form.html', {
+            'form': form,
+        })
+
+
+class AboutUsView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    template_name = "about_us.html"
+    model = About
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        return context
+
+
+class AboutUsUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    template_name = "forms/about_us_form.html"
+    form_class = AboutForm
+    model = About
+    success_url = reverse_lazy('dashboard:about_us')
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
