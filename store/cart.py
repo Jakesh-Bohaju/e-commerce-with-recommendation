@@ -56,3 +56,9 @@ class Cart(object):
         for p in self.cart.keys():
             self.cart[str(p)]['product'] = Product.objects.get(pk=p)
         return int(sum(item['product'].price * item['quantity'] for item in self.cart.values()))
+
+    def get_gross_total_cost(self):
+        for p in self.cart.keys():
+            self.cart[str(p)]['product'] = Product.objects.get(pk=p)
+        a = [item['product'].price * item['quantity'] for item in self.cart.values()]
+        return a
