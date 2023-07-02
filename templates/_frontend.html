@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'frontend/assets/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'frontend/assets/css/skins/skin-demo-3.css' %}">
     <link rel="stylesheet" href="{% static 'frontend/assets/css/demos/demo-3.css' %}">
+
 </head>
 
 <body>
@@ -34,7 +35,7 @@
 
                     <ul class="top-menu">
                         <li>
-{#                            <a href="#">Links</a>#}
+                            {#                            <a href="#">Links</a>#}
                             <ul>
                                 <li>
                                     <a href="#">Chat with Us</a>
@@ -60,7 +61,7 @@
                     </button>
 
                     <a href="{% url 'frontpage' %}" class="logo">
-                        <img src="{{ about.logo.url }}" alt="{{  about.title }}" width="20%" height="20">
+                        <img src="{{ about.logo.url }}" alt="{{ about.title }}" width="20%" height="20">
                     </a>
                 </div><!-- End .header-left -->
                 <div class="header-center">
@@ -81,23 +82,21 @@
                     {% if request.user.is_authenticated %}
                         {% if not request.user.is_superuser and not request.user.is_vendor %}
                             <div class="dropdown cart-dropdown">
-                                <a href="{% url 'cart_view' %}" class="dropdown-toggle" role="button"
-                                   data-toggle="dropdown"
+                                <a href="{% url 'cart_view' %}" class="dropdown-toggle button" role="button"
                                    aria-haspopup="true"
-                                   aria-expanded="false" data-display="static">
+                                   aria-expanded="false">
                                     <div class="icon">
                                         <i class="icon-shopping-cart"></i>
                                         <span class="cart-count">{{ cart|length }}</span>
                                     </div>
-                                    <p class="text-white">Cart</p>
+                                    <p class="text-white pt-2">Cart</p>
                                 </a>
                             </div>
                         {% endif %}
 
                         <div class="dropdown cart-dropdown">
                             {% if request.user.is_superuser %}
-                                <a href="{% url 'dashboard:admin_index' %}" class="dropdown-toggle" role="button"
-                                   data-toggle="dropdown"
+                                <a href="{% url 'dashboard:admin_index' %}" class="button dropdown-toggle" role="button"
                                    aria-haspopup="true"
                                    aria-expanded="false">
                                     <div class="icon">
@@ -109,10 +108,11 @@
                                                   d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                                         </svg>
                                     </div>
-                                    <p class="text-white">{{ request.user.username }}</p>
+                                    <p class="text-white pt-2">{{ request.user.username }}</p>
                                 </a>
                             {% elif request.user.is_vendor %}
-                                <a href="{% url 'seller' request.user.id %}" class="dropdown-toggle" role="button"
+                                <a href="{% url 'seller' request.user.id %}" class="dropdown-toggle button"
+                                   role="button"
                                    data-toggle="dropdown"
                                    aria-haspopup="true"
                                    aria-expanded="false">
@@ -125,10 +125,10 @@
                                                   d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                                         </svg>
                                     </div>
-                                    <p class="text-white">{{ request.user.username }}</p>
+                                    <p class="text-white pt-2">{{ request.user.username }}</p>
                                 </a>
                             {% else %}
-                                <a href="{% url 'frontpage' %}" class="dropdown-toggle" role="button"
+                                <a href="{% url 'frontpage' %}" class="dropdown-toggle button" role="button"
                                    id="dropdownMenuButton"
                                    aria-haspopup="true"
                                    aria-expanded="false">
@@ -141,7 +141,7 @@
                                                   d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                                         </svg>
                                     </div>
-                                    <p class="text-white">{{ request.user.username }}</p>
+                                    <p class="text-white pt-2">{{ request.user.username }}</p>
                                 </a>
                             {% endif %}
 
@@ -153,6 +153,9 @@
                                     {% endif %}">Home</a>
                                 {% endif %}
                                 <li><a class="dropdown-item bg-dark text-white" href="
+
+
+
                                         {% if request.user.is_vendor %}{% url 'vendor_detail' request.user.id %}{% endif %}">Profile</a>
                                 </li>
                                 <li><a class="dropdown-item bg-dark text-white" href="{% url 'logout' %}">Log Out</a>
@@ -245,14 +248,14 @@
                 <div class="row">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget widget-about">
-                            <img src="{{ about.logo.url }}" class="footer-logo" alt="{{ about.title}}"
+                            <img src="{{ about.logo.url }}" class="footer-logo" alt="{{ about.title }}"
                                  width="80%" height="50%">
                             <p>{{ about.description | truncatewords:15 }}</p>
 
                             <div class="widget-call">
                                 <i class="icon-phone"></i>
                                 Got Question? Call us 24/7
-                                <a class="text-light" href="tel:#">+977 {{ about.phoneNo}}</a>
+                                <a class="text-light" href="tel:#">+977 {{ about.phoneNo }}</a>
                             </div><!-- End .widget-call -->
                         </div><!-- End .widget about-widget -->
                     </div><!-- End .col-sm-6 col-lg-3 -->

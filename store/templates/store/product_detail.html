@@ -1,80 +1,329 @@
-{% extends 'core/base.html' %}
+{% extends '_frontend.html' %}
 
 {% block title %}
     {{ product.title }}
 {% endblock %}
 
-{% block content %}
-    {% if product.image %}
-        <div class="bg-gray-200 p-4 rounded-xl">
-        <div class="image mb-4 mt-0 ">
-            <img src="{{ product.image.url }}" class="img-fluid w-50 h-80" alt="Image of {{ product.title }}">
+{% load static %}
+{% block frontend_content %}
+    <div class="container-fluid">
 
-        </div>
-    {% endif %}
-<h1 class="text-2xl">{{ product.title }}</h1>
-<p class="text-s text-gray-500">
-    Rs.{{ product.price }}
-    -
-    <a href="{% url 'vendor_detail' product.user.id %}">{% firstof product.user.get_full_name product.user.username %}</a>
-</p>
-{% if product.get_rating > 0 %}
-    <p class="mt-1">Rating: {{ product.get_rating }}/5</p>
-{% endif %}
-{% if product.description %}
-    <p class="mt-4">{{ product.description }}</p>
-{% endif %}
-{% if not request.user.is_superuser and not request.user.is_vendor %}
-    <a href="{% url 'add_to_cart' product.id %}" class="px-2 py-2 mb-2  flex items-center ">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"/>
-        </svg>
-    </a>
-    <a href="{% url 'checkout' %}" class="inline-block px-4 py-2 bg-green-800 text-white">Order Now</a>
-{% endif %}
-</div>
-    <div class="w-full mt-6">
-        <h2 class="text-xl">Reviews</h2>
-        {% if request.user.is_authenticated %}
-            <form method="post" action="." class="mb-6 mt-6 p-6 bg-green-800 rounded-xl">
-                {% csrf_token %}
-                <div>
-                    <label class="mt-2 text-white mb-4">Rating</label><br>
-                    <select name="rating" class="block text-gray-700 text-sm  mb-2">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3" selected>3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-white">Comment</label><br>
-                    <textarea name="content"></textarea>
-                </div>
-                <div>
-                    <button class="px-4 py-2 text-white-400 bg-green-400">Submit</button>
-                </div>
-            </form>
-        {% endif %}
-        {% for review in reviews %}
-            <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">
-                <strong></strong>{{ review.created_by }}<br>
-                <strong>Rating: </strong>{{ review.rating }}/5<br>
-                <strong>Comment: </strong><br>
-                {{ review.content }}<br>
-                <strong>Date: </strong>{{ review.created_at|date:"Y-m-d" }}<br>
+        <main class="main">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+                <div class="container d-flex align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
+                        <li class="breadcrumb-item">Products</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
 
-            </div>
-        {% endfor %}
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="product-details-top">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="product-gallery">
+                                            <figure class="product-main-image">
+                                                <img id="product-zoom"
+                                                     src="{{ product.image.url }}"
+                                                     data-zoom-image="{{ product.image.url }}"
+                                                     alt="{{ product.title }}">
+                                            </figure><!-- End .product-main-image -->
+                                        </div><!-- End .product-gallery -->
+                                    </div><!-- End .col-md-6 -->
+
+                                    <div class="col-md-6">
+                                        <div class="product-details product-details-sidebar">
+                                            <h1 class="product-title">{{ product.title }}</h1>
+                                            <!-- End .product-title -->
+
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 80%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <a class="ratings-text" href="#product-review-link" id="review-link">( 2
+                                                    Reviews )</a>
+                                            </div><!-- End .rating-container -->
+
+                                            <div class="product-price">
+                                                Rs. {{ product.price }}
+                                            </div><!-- End .product-price -->
+
+                                            <div class="product-content">
+                                                <p>{{ product.description | truncatewords:40 }}</p>
+                                            </div><!-- End .product-content -->
+                                            {% if not request.user.is_superuser and not request.user.is_vendor %}
+                                                <div class="product-details-action">
+                                                    <div class="details-action-col">
+                                                        <label for="qty">Qty:</label>
+                                                        <div class="product-details-quantity">
+                                                            <input type="number" id="qty" class="form-control" value="1"
+                                                                   min="1" max="10" step="1" data-decimals="0" required>
+                                                        </div><!-- End .product-details-quantity -->
+
+                                                        <a href="{% url 'add_to_cart' product.id %}"
+                                                           class="btn-product btn-cart">add to cart</a>
+                                                    </div><!-- End .details-action-col -->
+
+                                                </div><!-- End .product-details-action -->
+                                            {% endif %}
+                                            <div class="product-details-footer details-footer-col">
+                                                <div class="product-cat">
+                                                    <span>Category:</span>
+                                                    <a href="{% url 'category_detail' product.category.slug %}">{{ product.category.title }}</a>
+                                                </div><!-- End .product-cat -->
+                                            </div><!-- End .product-details-footer -->
+                                        </div><!-- End .product-details -->
+                                    </div><!-- End .col-md-6 -->
+                                </div><!-- End .row -->
+                            </div><!-- End .product-details-top -->
+
+                            <div class="product-details-tab">
+                                <ul class="nav nav-pills justify-content-center" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="product-desc-link" data-toggle="tab"
+                                           href="#product-desc-tab" role="tab" aria-controls="product-desc-tab"
+                                           aria-selected="true">Description</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="product-review-link" data-toggle="tab"
+                                           href="#product-review-tab" role="tab" aria-controls="product-review-tab"
+                                           aria-selected="false">Reviews ({{ reviews.count }})</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel"
+                                         aria-labelledby="product-desc-link">
+                                        <div class="product-desc-content">
+                                            <h3>Product Information</h3>
+                                            <p>{{ product.description }}</p>
+                                        </div><!-- End .product-desc-content -->
+                                    </div><!-- .End .tab-pane -->
+
+                                    <div class="tab-pane fade" id="product-review-tab" role="tabpanel"
+                                         aria-labelledby="product-review-link">
+                                        <div class="reviews">
+                                            <h3>Reviews ({{ reviews.count }})</h3>
+                                            {% for review in reviews %}
+                                                <div class="review">
+                                                    <div class="row no-gutters">
+                                                        <div class="col-auto">
+                                                            <h4><a href="#">{{ review.created_by.username }}</a></h4>
+                                                            <div class="ratings-container">
+                                                                <div class="ratings">
+                                                                    <div class="ratings-val" style="width: 80%;"></div>
+                                                                    <!-- End .ratings-val -->
+                                                                </div><!-- End .ratings -->
+                                                            </div><!-- End .rating-container -->
+                                                            <span class="review-date">{{ review.created_at|date:"D d M Y" }}</span>
+                                                        </div><!-- End .col -->
+                                                        <div class="col">
+                                                            <div class="review-content">
+                                                                <p>{{ review.content }}</p>
+                                                            </div><!-- End .review-content -->
+                                                        </div><!-- End .col-auto -->
+                                                    </div><!-- End .row -->
+                                                </div><!-- End .review -->
+                                            {% endfor %}
+                                        </div><!-- End .reviews -->
+                                    </div><!-- .End .tab-pane -->
+                                </div><!-- End .tab-content -->
+                            </div><!-- End .product-details-tab -->
+
+                            <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+                            <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow"
+                                 data-toggle="owl"
+                                 data-owl-options='{
+                                    "nav": false,
+                                    "dots": true,
+                                    "margin": 20,
+                                    "loop": false,
+                                    "responsive": {
+                                        "0": {
+                                            "items":1
+                                        },
+                                        "480": {
+                                            "items":2
+                                        },
+                                        "768": {
+                                            "items":3
+                                        },
+                                        "992": {
+                                            "items":4
+                                        },
+                                        "1200": {
+                                            "items":4,
+                                            "nav": true,
+                                            "dots": false
+                                        }
+                                    }
+                                }'>
+                                {% for product in random_products %}
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <span class="product-label label-new">New</span>
+                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.title }}"
+                                                     class="product-image">
+                                            </a>
+                                            {% if not request.user.is_superuser and not request.user.is_vendor %}
+                                                <div class="product-action">
+                                                    <a href="{% url 'add_to_cart' product.id %}"
+                                                       class="btn-product btn-cart"><span>add to cart</span></a>
+                                                </div><!-- End .product-action -->
+                                            {% endif %}
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="{% url 'category_detail' product.category.slug %}">{{ product.category.title }}</a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a
+                                                    href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.title }}</a>
+                                            </h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                Rs. {{ product.price }}
+                                            </div><!-- End .product-price -->
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 20%;"></div>
+                                                    <!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">( {{ reviews.count }} Reviews )</span>
+                                            </div><!-- End .rating-container -->
+
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                {% endfor %}
+                            </div><!-- End .owl-carousel -->
+                        </div><!-- End .col-lg-9 -->
+
+                        <aside class="col-lg-3">
+                            <div class="sidebar sidebar-product">
+                                <div class="widget widget-products">
+                                    <h4 class="widget-title">Recommended Product</h4><!-- End .widget-title -->
+
+                                    <div class="products">
+                                        {% for product in recommended_products %}
+                                            <div class="product product-sm">
+                                                <figure class="product-media">
+                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                        <img src="{{ product.image.url }}"
+                                                             alt="{{ product.title }}" class="product-image">
+                                                    </a>
+                                                </figure>
+
+                                                <div class="product-body">
+                                                    <h5 class="product-title"><a
+                                                            href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.title }}</a>
+                                                    </h5><!-- End .product-title -->
+                                                    <div class="product-price">
+                                                        <span class="new-price">Rs. {{ product.price }}</span>
+                                                    </div><!-- End .product-price -->
+                                                </div><!-- End .product-body -->
+                                            </div><!-- End .product product-sm -->
+                                        {% endfor %}
+                                    </div><!-- End .products -->
+
+                                </div><!-- End .widget widget-products -->
+
+                                <div class="widget widget-banner-sidebar">
+                                    <div class="banner-sidebar-title">ad box 280 x 280</div><!-- End .ad-title -->
+
+                                    <div class="banner-sidebar banner-overlay">
+                                        <a href="#">
+                                            <img src="assets/images/blog/sidebar/banner.jpg" alt="banner">
+                                        </a>
+                                    </div><!-- End .banner-ad -->
+                                </div><!-- End .widget -->
+                            </div><!-- End .sidebar sidebar-product -->
+                        </aside><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+
+                </div><!-- End .container -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+        {#        <main class="main">#}
+        {#            {% if product.image %}#}
+        {#                <div class="bg-gray-200 p-4 rounded-xl">#}
+        {#                <div class="image mb-4 mt-0 ">#}
+        {#                    <img src="{{ product.image.url }}" class="img-fluid w-50 h-80" alt="Image of {{ product.title }}">#}
+        {##}
+        {#                </div>#}
+        {#            {% endif %}#}
+        {#            <h1 class="text-2xl">{{ product.title }}</h1>#}
+        {#            <p class="text-s text-gray-500">#}
+        {#                Rs.{{ product.price }}#}
+        {#                -#}
+        {#                <a href="{% url 'vendor_detail' product.user.id %}">{% firstof product.user.get_full_name product.user.username %}</a>#}
+        {#            </p>#}
+        {#            {% if product.get_rating > 0 %}#}
+        {#                <p class="mt-1">Rating: {{ product.get_rating }}/5</p>#}
+        {#            {% endif %}#}
+        {#            {% if product.description %}#}
+        {#                <p class="mt-4">{{ product.description }}</p>#}
+        {#            {% endif %}#}
+        {#            {% if not request.user.is_superuser and not request.user.is_vendor %}#}
+        {#                <a href="{% url 'add_to_cart' product.id %}" class="px-2 py-2 mb-2  flex items-center ">#}
+        {#                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">#}
+        {#                        <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"/>#}
+        {#                    </svg>#}
+        {#                </a>#}
+        {#                <a href="{% url 'checkout' %}" class="inline-block px-4 py-2 bg-green-800 text-white">Order Now</a>#}
+        {#            {% endif %}#}
+        {#            </div>#}
+        {#            <div class="w-full mt-6">#}
+        {#                <h2 class="text-xl">Reviews</h2>#}
+        {#                {% if request.user.is_authenticated %}#}
+        {#                    <form method="post" action="." class="mb-6 mt-6 p-6 bg-green-800 rounded-xl">#}
+        {#                        {% csrf_token %}#}
+        {#                        <div>#}
+        {#                            <label class="mt-2 text-white mb-4">Rating</label><br>#}
+        {#                            <select name="rating" class="block text-gray-700 text-sm  mb-2">#}
+        {#                                <option value="1">1</option>#}
+        {#                                <option value="2">2</option>#}
+        {#                                <option value="3" selected>3</option>#}
+        {#                                <option value="4">4</option>#}
+        {#                                <option value="5">5</option>#}
+        {#                            </select>#}
+        {#                        </div>#}
+        {#                        <div>#}
+        {#                            <label class="text-white">Comment</label><br>#}
+        {#                            <textarea name="content"></textarea>#}
+        {#                        </div>#}
+        {#                        <div>#}
+        {#                            <button class="px-4 py-2 text-white-400 bg-green-400">Submit</button>#}
+        {#                        </div>#}
+        {#                    </form>#}
+        {#                {% endif %}#}
+        {#                {% for review in reviews %}#}
+        {#                    <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">#}
+        {#                        <strong></strong>{{ review.created_by }}<br>#}
+        {#                        <strong>Rating: </strong>{{ review.rating }}/5<br>#}
+        {#                        <strong>Comment: </strong><br>#}
+        {#                        {{ review.content }}<br>#}
+        {#                        <strong>Date: </strong>{{ review.created_at|date:"Y-m-d" }}<br>#}
+        {##}
+        {#                    </div>#}
+        {#                {% endfor %}#}
+        {#            </div>#}
+        {#            <h4>Recommend Products</h4>#}
+        {#            {% for recommended_product in recommended_products %}#}
+        {#                <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">#}
+        {#                    {{ recommended_product.title }}#}
+        {#                    <img src="{{ recommended_product.image.url }}" alt="Image of {{ recommended_product.title }}"#}
+        {#                         style="height: 100px; width: 100px">#}
+        {#                    {{ recommended_product.price }}#}
+        {##}
+        {#                </div>#}
+        {#            {% endfor %}#}
+        {#        </main>#}
     </div>
-    <h4>Recommend Products</h4>
-    {% for recommended_product in recommended_products %}
-        <div class="px-4 py-6 bg-gray-300 rounded-xl mb-4">
-            {{ recommended_product.title }}
-            <img src="{{ recommended_product.image.url }}" alt="Image of {{ recommended_product.title }}" style="height: 100px; width: 100px">
-            {{ recommended_product.price }}
-
-        </div>
-    {% endfor %}
 {% endblock %}

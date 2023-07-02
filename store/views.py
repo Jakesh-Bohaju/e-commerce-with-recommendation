@@ -187,19 +187,23 @@ def product_detail(request, category_slug, slug):
                 )
 
     review = Review.objects.filter(product_id=product.id)
+    random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
+    about = About.objects.all().first()
     con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
     if not hyb_pid == None:
         hyb_pid = hyb_pid[1:6]
-        recommended_products = Product.objects.filter(id__in=hyb_pid[1:6])
+        recommended_products = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
     elif not coll_pid == None:
-        recommended_products = Product.objects.filter(id__in=coll_pid[1:6])
+        recommended_products = Product.objects.filter(id__in=coll_pid[1:6], status='Active')
     else:
-        recommended_products = Product.objects.filter(id__in=con_pid[1:6])
+        recommended_products = Product.objects.filter(id__in=con_pid[1:6], status='Active')
 
     return render(request, 'store/product_detail.html', {
         'product': product,
+        'random_products': random_products,
         'reviews': review,
-        'recommended_products': recommended_products
+        'recommended_products': recommended_products,
+        'about': about,
     })
 
 
@@ -213,4 +217,3 @@ class ProductListView(ListView):
         context = super().get_context_data(**kwargs)
         context['about'] = About.objects.all().first()
         return context
-
