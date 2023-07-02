@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.views.generic import ListView
 
 from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
@@ -199,3 +200,9 @@ def product_detail(request, category_slug, slug):
         'reviews': review,
         'recommended_products': recommended_products
     })
+
+
+class ProductListView(ListView):
+    template_name = "product_list.html"
+    model = Product
+    context_object_name = 'products'
