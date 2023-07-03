@@ -10,13 +10,13 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'frontpage' %}">Home</a></li>
                         <li class="breadcrumb-item">{{ request.user.username }}</li>
-                        <li class="breadcrumb-item active" aria-current="page">Add Detail</li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Detail</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
             <div class="page-content">
                 <div class="container">
-                    <form method="post" action="{% url 'add_profile' request.user.id %}" enctype="multipart/form-data" style="background-color: #e5efea">
+                    <form method="post" action="" enctype="multipart/form-data" style="background-color: #e5efea">
                         {% csrf_token %}
                         <div class="form-row p-3">
                             <div class="form-group col-md-6">
@@ -63,9 +63,16 @@
                                     <p>{{ form.photo.errors }}</p>
                                 {% endif %}
                             </div>
+                            <div class="form-group col-md-4">
+                                {% if profile.photo %}
+                                    <img src="{{ profile.photo.url }}" alt="{{ profile.user.username }}" width="25%"
+                                         height="25%" class="rounded-pill mx-auto d-block"> {% endif %}
+                            </div>
                         </div>
-                    <input type="hidden" name="user" value="{{ request.user.id }}">
-                       <button type="submit" class="btn btn-primary">Add Detail</button>
+                        <input type="hidden" name="user" value="{{ request.user.id }}">
+                        <input type="hidden" name="modified_date">
+                        {% if profile %}
+                            <button type="submit" class="btn btn-primary">Add Detail</button>{% endif %}
                     </form>
                 </div>
             </div>

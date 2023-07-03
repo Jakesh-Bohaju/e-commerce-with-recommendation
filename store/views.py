@@ -164,7 +164,6 @@ def search(request):
     about = About.objects.all().first()
     categories = Category.objects.all()
 
-
     return render(request, 'store/search.html', {
         'query': query,
         'products': products,
@@ -258,6 +257,11 @@ class AddProfileView(CreateView):
         context['categories'] = Category.objects.all()
         return context
 
+    def form_invalid(self, form):
+        return render(self.request, 'store/profile_form.html', {
+            'form': form,
+        })
+
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk': self.request.user.id})
 
@@ -269,6 +273,7 @@ class ProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         context['about'] = About.objects.all().first()
         context['categories'] = Category.objects.all()
+        context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
         return context
 
     def get_queryset(self):
@@ -276,13 +281,25 @@ class ProfileView(DetailView):
 
 
 class UpdateProfileView(UpdateView):
-    template_name = "store/profile_form.html"
+    template_name = "store/update_profile_form.html"
+    fields = ['first_name', 'last_name', 'address', 'mobileNo', 'photo', 'user']
     model = CustomerProfile
-    queryset = Product.objects.filter(status='Active')
-    context_object_name = 'products'
+
+    # context_object_name = 'con_profile'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['about'] = About.objects.all().first()
         context['categories'] = Category.objects.all()
+        print(self.request.user.id)
+        context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
         return context
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_queryset(self):
+        return CustomerProfile.objects.filter(id=self.kwargs.get('pk'))
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.request.user.id})
