@@ -34,73 +34,28 @@
                 </span>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="example1" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th>S.N</th>
-                            <th>Name</th>
-                            <th>Caption</th>
-                            <th>Weight</th>
-                            <th>Image</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for banner in banners %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ banner.title }}</td>
-                                <td>{{ banner.caption }}</td>
-                                <td>{{ banner.weight }}</td>
-                                <td><img alt="{{ banner.title }}" src="{{ banner.image.url }}"
-                                         class="rounded mx-auto d-block"
-                                         height="50" width="100"></td>
-                                <td><a class="btn btn-info btn-sm" style="color: white"
-                                       data-toggle="modal"
-                                       data-target="#banner{{ banner.id }}del">
-                                    <i class="fas fa-trash-alt">
-                                    </i>
-                                    Delete
-                                </a></td>
-                            </tr>
-                            <div id="banner{{ banner.id }}del" class="modal fade"
-                                 role="dialog">
-                                <div class="modal-dialog">
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" style="alignment: left">
-                                                Delete {{ banner.title }}</h4>
-                                            <button type="button" class="close" data-dismiss="modal">
-                                                &times;
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Are you sure you want to delete
-                                                "{{ banner.title }}"?</p>
-                                            <img alt="{{ banner.title }}" src="{{ banner.image.url }}"
-                                                 class="rounded mx-auto d-block"
-                                                 height="100" width="100%">
-                                            <div class="modal-del-fo">
-                                                <form method="post"
-                                                      action="{% url 'dashboard:delete_banner' banner.id %}">
-                                                    {% csrf_token %}
-                                                    <button value="Confirm" class="btn btn-info btn-sm">
-                                                        Yes
-                                                    </button>
-                                                    <button class="btn btn-info btn-sm"
-                                                            data-dismiss="modal">No
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-6">
+                        <div><h5 class="text-dark font-weight-bold">Company Name</h5>{{ about.title }}</div>
+                        <br>
+                        <div><h5 class="text-dark font-weight-bold">Company Address</h5>{{ about.address }}<br></div>
+                        <div><h5 class="text-dark font-weight-bold">Company Information</h5>{{ about.description }}
+                        </div>
+                        <br>
+                        <div><h5 class="text-dark font-weight-bold">Phone Number</h5>{{ about.phoneNo }}</div>
+                        <br>
+                        {% if about.mobileNo %}
+                            <div><h5 class="text-dark font-weight-bold">Mobile Number</h5>{{ about.mobileNo }}</div>
+                            <br>{% endif %}
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <img src="{{ about.logo.url }}" height="100%" width="100%">
+                        </div>
+                        <div>{% if about.photo %}
+                            <img src="{{ about.photo.url }}" height="100%" width="100%">
+                        {% endif %}</div>
+                    </div>
                 </div>
             </div>
         </div>
