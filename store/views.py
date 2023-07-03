@@ -113,10 +113,11 @@ def cart_view(request):
 
 
 @login_required
-def checkout(request):
+def checkout(request, pk):
     cart = Cart(request)
     about = About.objects.all().first()
     categories = Category.objects.all()
+    profile = CustomerProfile.objects.get(user_id=pk)
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -153,6 +154,7 @@ def checkout(request):
         'form': form,
         'about': about,
         'categories': categories,
+        'profile': profile,
 
     })
 
