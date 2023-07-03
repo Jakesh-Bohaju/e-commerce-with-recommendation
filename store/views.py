@@ -1,17 +1,19 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 # from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView, TemplateView, CreateView, DetailView
 
 from ecomadmin.models import About
 from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
 from .cart import Cart
-from .forms import OrderForm
-from .models import Category, Product, Order, OrderItem, Review
+from .forms import OrderForm, ProfileForm
+from .models import Category, Product, Order, OrderItem, Review, CustomerProfile
 
 
 def handlelogin(request):
@@ -100,10 +102,13 @@ def remove_from_cart(request, product_id):
 def cart_view(request):
     cart = Cart(request)
     about = About.objects.all().first()
+    categories = Category.objects.all()
 
     return render(request, 'store/cart_view.html', {
         'cart': cart,
         'about': about,
+        'categories': categories,
+
     })
 
 
@@ -111,6 +116,7 @@ def cart_view(request):
 def checkout(request):
     cart = Cart(request)
     about = About.objects.all().first()
+    categories = Category.objects.all()
 
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -120,8 +126,8 @@ def checkout(request):
 
             for item in cart:
                 product = item['product']
-                print(product.price)
-                print(int(item['quantity']))
+                # print(product.price)
+                # print(int(item['quantity']))
                 total_price += product.price * int(item['quantity'])
 
             order = form.save(commit=False)
@@ -146,6 +152,8 @@ def checkout(request):
         'cart': cart,
         'form': form,
         'about': about,
+        'categories': categories,
+
     })
 
 
@@ -154,11 +162,15 @@ def search(request):
     products = Product.objects.filter(status=Product.ACTIVE).filter(
         Q(title__icontains=query) | Q(description__icontains=query))
     about = About.objects.all().first()
+    categories = Category.objects.all()
+
 
     return render(request, 'store/search.html', {
         'query': query,
         'products': products,
         'about': about,
+        'categories': categories,
+
     })
 
 
@@ -166,16 +178,19 @@ def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = category.products.filter(status=Product.ACTIVE)
     about = About.objects.all().first()
+    categories = Category.objects.all()
 
     return render(request, 'store/category_detail.html', {
         'category': category,
         'products': products,
-        'about':about,
+        'about': about,
+        'categories': categories,
     })
 
 
 def product_detail(request, category_slug, slug):
     product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
+    categories = Category.objects.all()
 
     if request.method == 'POST':
         rating = request.POST.get('rating', 3)
@@ -213,6 +228,8 @@ def product_detail(request, category_slug, slug):
         'reviews': review,
         'recommended_products': recommended_products,
         'about': about,
+        'categories': categories,
+
     })
 
 
@@ -225,4 +242,47 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['about'] = About.objects.all().first()
+        context['categories'] = Category.objects.all()
+        return context
+
+
+class AddProfileView(CreateView):
+    template_name = "store/profile_form.html"
+    form_class = ProfileForm
+    model = CustomerProfile
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        context['categories'] = Category.objects.all()
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.request.user.id})
+
+
+class ProfileView(DetailView):
+    template_name = "store/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        context['categories'] = Category.objects.all()
+        return context
+
+    def get_queryset(self):
+        return EcommerceUser.objects.filter(id=self.kwargs.get('pk'))
+
+
+class UpdateProfileView(UpdateView):
+    template_name = "store/profile_form.html"
+    model = CustomerProfile
+    queryset = Product.objects.filter(status='Active')
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about'] = About.objects.all().first()
+        context['categories'] = Category.objects.all()
         return context

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Order
+from .models import Product, Order, CustomerProfile
 
 
 class OrderForm(forms.ModelForm):
@@ -20,6 +20,9 @@ class OrderForm(forms.ModelForm):
                 'class': 'w-full px-4 py-2 border border-gray-200'
             }),
             'city': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-200'
+            }),
+            'mobile_no': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-2 border border-gray-200'
             })}
 
@@ -44,3 +47,11 @@ class ProductForm(forms.ModelForm):
             'image': forms.FileInput(attrs={
                 'class': 'w-full px-4 py-2 border border-gray-200'
             })}
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomerProfile
+        fields = [
+            'first_name', 'last_name', 'address', 'mobileNo', 'photo', 'user'
+        ]

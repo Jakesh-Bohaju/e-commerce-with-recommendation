@@ -101,6 +101,7 @@ class Order(models.Model):
     address = models.CharField(max_length=255)
     zipcode = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
+    mobile_no = models.CharField(max_length=10, blank=True, null=True)
     total_cost = models.IntegerField(default=0)
     paid_amount = models.IntegerField(blank=True, null=True)
     is_paid = models.BooleanField(default=False)
@@ -136,9 +137,7 @@ class CustomerProfile(models.Model):
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=100)
     mobileNo = models.CharField(max_length=10)
-    photo = models.ImageField(upload_to='Customer Profile')
+    photo = models.ImageField(blank=True, null=True, upload_to='Customer Profile')
     user = models.ForeignKey(EcommerceUser, related_name="customer_detail", on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey(EcommerceUser, related_name="customer_detail_modified", on_delete=models.SET_NULL,
-                                    blank=True, null=True)
     modified_date = models.DateTimeField(blank=True, auto_now=True)

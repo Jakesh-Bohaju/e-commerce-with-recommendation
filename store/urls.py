@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import ProductListView
+from .views import ProductListView, AddProfileView, ProfileView
 
 urlpatterns = [
     path('login', views.handlelogin, name='login'),
@@ -16,5 +16,8 @@ urlpatterns = [
     path('<slug:slug>/', views.category_detail, name='category_detail'),
     path('<slug:category_slug>/<slug:slug>/', views.product_detail, name='product_detail'),
     path('product', ProductListView.as_view(), name='product_list'),
-
+    path('add-profile/<int:pk>', AddProfileView.as_view(), name='add_profile'),
+    path('profile/<int:pk>', ProfileView.as_view(), name='profile'),
+    # path('update-profile/<int:pk>', Update ProfileView.as_view(), name='update_profile'),
+#
 ]
