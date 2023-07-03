@@ -101,16 +101,19 @@ def remove_from_cart(request, product_id):
 
 @login_required
 def cart_view(request):
-    cart = Cart(request)
-    about = About.objects.all().first()
-    categories = Category.objects.all()
+    try:
+        cart = Cart(request)
+        about = About.objects.all().first()
+        categories = Category.objects.all()
 
-    return render(request, 'store/cart_view.html', {
-        'cart': cart,
-        'about': about,
-        'categories': categories,
+        return render(request, 'store/cart_view.html', {
+            'cart': cart,
+            'about': about,
+            'categories': categories,
 
-    })
+        })
+    except:
+        pass
 
 
 @login_required
@@ -164,78 +167,86 @@ def checkout(request, pk):
 
 
 def search(request):
-    query = request.GET.get('query', '')
-    products = Product.objects.filter(status=Product.ACTIVE).filter(
-        Q(title__icontains=query) | Q(description__icontains=query))
-    about = About.objects.all().first()
-    categories = Category.objects.all()
+    try:
+        query = request.GET.get('query', '')
+        products = Product.objects.filter(status=Product.ACTIVE).filter(
+            Q(title__icontains=query) | Q(description__icontains=query))
+        about = About.objects.all().first()
+        categories = Category.objects.all()
 
-    return render(request, 'store/search.html', {
-        'query': query,
-        'products': products,
-        'about': about,
-        'categories': categories,
+        return render(request, 'store/search.html', {
+            'query': query,
+            'products': products,
+            'about': about,
+            'categories': categories,
 
-    })
+        })
+    except:
+        pass
 
 
 def category_detail(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    products = category.products.filter(status=Product.ACTIVE)
-    about = About.objects.all().first()
-    categories = Category.objects.all()
+    try:
+        category = get_object_or_404(Category, slug=slug)
+        products = category.products.filter(status=Product.ACTIVE)
+        about = About.objects.all().first()
+        categories = Category.objects.all()
 
-    return render(request, 'store/category_detail.html', {
-        'category': category,
-        'products': products,
-        'about': about,
-        'categories': categories,
-    })
-
+        return render(request, 'store/category_detail.html', {
+            'category': category,
+            'products': products,
+            'about': about,
+            'categories': categories,
+        })
+    except:
+        pass
 
 def product_detail(request, category_slug, slug):
-    product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
-    categories = Category.objects.all()
+    try:
+        product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
+        categories = Category.objects.all()
 
-    if request.method == 'POST':
-        rating = request.POST.get('rating', 3)
-        content = request.POST.get('content', '')
-        if content:
-            reviews = Review.objects.filter(created_by=request.user, product=product)
-            if reviews.count() > 0:
-                review = reviews.first()
-                review.rating = rating
-                review.content = content
-                review.save()
-            else:
-                review = Review.objects.create(
-                    product=product,
-                    rating=rating,
-                    content=content,
-                    created_by=request.user
-                )
+        if request.method == 'POST':
+            rating = request.POST.get('rating', 3)
+            content = request.POST.get('content', '')
+            if content:
+                reviews = Review.objects.filter(created_by=request.user, product=product)
+                if reviews.count() > 0:
+                    review = reviews.first()
+                    review.rating = rating
+                    review.content = content
+                    review.save()
+                else:
+                    review = Review.objects.create(
+                        product=product,
+                        rating=rating,
+                        content=content,
+                        created_by=request.user
+                    )
 
-    review = Review.objects.filter(product_id=product.id)
-    random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
-    about = About.objects.all().first()
-    con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
-    if not hyb_pid == None:
-        hyb_pid = hyb_pid[1:6]
-        recommended_products = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
-    elif not coll_pid == None:
-        recommended_products = Product.objects.filter(id__in=coll_pid[1:6], status='Active')
-    else:
-        recommended_products = Product.objects.filter(id__in=con_pid[1:6], status='Active')
+        review = Review.objects.filter(product_id=product.id)
+        random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
+        about = About.objects.all().first()
+        con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
+        if not hyb_pid == None:
+            hyb_pid = hyb_pid[1:6]
+            recommended_products = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
+        elif not coll_pid == None:
+            recommended_products = Product.objects.filter(id__in=coll_pid[1:6], status='Active')
+        else:
+            recommended_products = Product.objects.filter(id__in=con_pid[1:6], status='Active')
 
-    return render(request, 'store/product_detail.html', {
-        'product': product,
-        'random_products': random_products,
-        'reviews': review,
-        'recommended_products': recommended_products,
-        'about': about,
-        'categories': categories,
+        return render(request, 'store/product_detail.html', {
+            'product': product,
+            'random_products': random_products,
+            'reviews': review,
+            'recommended_products': recommended_products,
+            'about': about,
+            'categories': categories,
 
-    })
+        })
+    except:
+        pass
 
 
 class ProductListView(ListView):
@@ -246,8 +257,11 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
-        context['categories'] = Category.objects.all()
+        try:
+            context['about'] = About.objects.all().first()
+            context['categories'] = Category.objects.all()
+        except:
+            pass
         return context
 
 
@@ -259,8 +273,11 @@ class AddProfileView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
-        context['categories'] = Category.objects.all()
+        try:
+            context['about'] = About.objects.all().first()
+            context['categories'] = Category.objects.all()
+        except:
+            pass
         return context
 
     def form_invalid(self, form):
@@ -277,10 +294,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
-        context['categories'] = Category.objects.all()
-        context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
-        context['order_items'] = OrderItem.objects.filter(created_by=self.request.user.id)
+        try:
+            context['about'] = About.objects.all().first()
+            context['categories'] = Category.objects.all()
+            context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
+            context['order_items'] = OrderItem.objects.filter(created_by=self.request.user.id)
+        except:
+            pass
         return context
 
     def get_queryset(self):
@@ -296,10 +316,12 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
-        context['categories'] = Category.objects.all()
-        print(self.request.user.id)
-        context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
+        try:
+            context['about'] = About.objects.all().first()
+            context['categories'] = Category.objects.all()
+            context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
+        except:
+            pass
         return context
 
     def form_invalid(self, form):

@@ -96,7 +96,10 @@ class CategoryView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -112,7 +115,10 @@ class ProductView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -127,9 +133,12 @@ class VendorView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['verified_vendors'] = VendorDetail.objects.filter(verify_status=True)
-        context['un_verified_vendors'] = VendorDetail.objects.filter(verify_status=False)
-        context['about'] = About.objects.all().first()
+        try:
+            context['verified_vendors'] = VendorDetail.objects.filter(verify_status=True)
+            context['un_verified_vendors'] = VendorDetail.objects.filter(verify_status=False)
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -140,7 +149,6 @@ class VendorUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
     success_url = reverse_lazy('dashboard:vendor')
 
     def form_invalid(self, form):
-        print(form.errors)
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -157,19 +165,21 @@ class CustomerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        customers_data = []
-        # data = {}
-        customers = EcommerceUser.objects.filter(is_superuser=False, is_vendor=False)
-        for customer in customers:
-            order_count = Order.objects.filter(created_by_id=customer.id).count()
-            product_count = OrderItem.objects.filter(created_by_id=customer.id).count()
-            total_buy = OrderItem.objects.filter(created_by_id=customer.id).aggregate(Sum('price'))
-            review_count = Review.objects.filter(created_by_id=customer.id).count()
-            total_buy = total_buy['price__sum']
-            data = [customer.username, order_count, product_count, total_buy, review_count]
-            customers_data.append(data)
-        context['about'] = About.objects.all().first()
-        context['customers'] = customers_data
+        try:
+            customers_data = []
+            customers = EcommerceUser.objects.filter(is_superuser=False, is_vendor=False)
+            for customer in customers:
+                order_count = Order.objects.filter(created_by_id=customer.id).count()
+                product_count = OrderItem.objects.filter(created_by_id=customer.id).count()
+                total_buy = OrderItem.objects.filter(created_by_id=customer.id).aggregate(Sum('price'))
+                review_count = Review.objects.filter(created_by_id=customer.id).count()
+                total_buy = total_buy['price__sum']
+                data = [customer.username, order_count, product_count, total_buy, review_count]
+                customers_data.append(data)
+            context['about'] = About.objects.all().first()
+            context['customers'] = customers_data
+        except:
+            pass
         return context
 
 
@@ -180,7 +190,10 @@ class OrderView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -206,7 +219,10 @@ class TrackingView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -218,7 +234,10 @@ class TrackingUpdateFormView(LoginRequiredMixin, AdminRequiredMixin, UpdateView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['vendors'] = VendorDetail.objects.all()
+        try:
+            context['vendors'] = VendorDetail.objects.all()
+        except:
+            pass
         return context
 
     def form_invalid(self, form):
@@ -237,17 +256,20 @@ class TransactionView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        transaction_dict = {}
-        vendors = VendorDetail.objects.all()
-        order_items = OrderItem.objects.all()
-        for vendor in vendors:
-            vendor_name = vendor.company_name
-            total_amount = OrderItem.objects.filter(product__user__username=vendor.vendor.username).aggregate(
-                total=Sum('price'))
-            transaction_dict[vendor_name] = total_amount[
-                'total']
-        context['transaction_list'] = transaction_dict
-        context['about'] = About.objects.all().first()
+        try:
+            transaction_dict = {}
+            vendors = VendorDetail.objects.all()
+            order_items = OrderItem.objects.all()
+            for vendor in vendors:
+                vendor_name = vendor.company_name
+                total_amount = OrderItem.objects.filter(product__user__username=vendor.vendor.username).aggregate(
+                    total=Sum('price'))
+                transaction_dict[vendor_name] = total_amount[
+                    'total']
+            context['transaction_list'] = transaction_dict
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -270,7 +292,10 @@ class BannerView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
@@ -297,7 +322,10 @@ class AboutUsView(LoginRequiredMixin, AdminRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['about'] = About.objects.all().first()
+        try:
+            context['about'] = About.objects.all().first()
+        except:
+            pass
         return context
 
 
