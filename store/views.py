@@ -280,6 +280,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         context['about'] = About.objects.all().first()
         context['categories'] = Category.objects.all()
         context['profile'] = CustomerProfile.objects.get(user=self.request.user.id)
+        context['order_items'] = OrderItem.objects.filter(created_by=self.request.user.id)
         return context
 
     def get_queryset(self):
