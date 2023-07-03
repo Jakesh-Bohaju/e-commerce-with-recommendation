@@ -116,7 +116,6 @@
                             {% elif request.user.is_vendor %}
                                 <a href="{% url 'seller' request.user.id %}" class="dropdown-toggle button"
                                    role="button"
-                                   data-toggle="dropdown"
                                    aria-haspopup="true"
                                    aria-expanded="false">
                                     <div class="icon">
@@ -132,7 +131,6 @@
                                 </a>
                             {% else %}
                                 <a href="{% url 'frontpage' %}" class="dropdown-toggle button" role="button"
-                                   id="dropdownMenuButton"
                                    aria-haspopup="true"
                                    aria-expanded="false">
                                     <div class="icon">
@@ -149,17 +147,16 @@
                             {% endif %}
 
                             <ul class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton">
-                                {% if request.user.is_superuser or request.user.is_vendor %}
-                                    <li>
-                                    <a class="dropdown-item bg-dark text-white" href="{% if request.user.is_superuser %}
-                                    {% url 'dashboard:admin_index' %}{% else %}{% url 'seller' request.user.id %}
-                                    {% endif %}">Home</a>
-                                {% endif %}
+{#                                {% if request.user.is_superuser or request.user.is_vendor %}#}
+{#                                    <li>#}
+{#                                    <a class="dropdown-item bg-dark text-white" href="{% if request.user.is_superuser %}#}
+{#                                    {% url 'dashboard:admin_index' %}{% else %}{% url 'seller' request.user.id %}#}
+{#                                    {% endif %}">Home</a>#}
+{#                                {% endif %}#}
                                 <li><a class="dropdown-item bg-dark text-white" href="
-
-
-
-                                        {% if request.user.is_vendor %}{% url 'vendor_detail' request.user.id %}{% endif %}">Profile</a>
+                                        {% if request.user.is_vendor %}{% url 'vendor_detail' request.user.id %}
+                                        {% elif request.user.is_superuser %}{% url 'dashboard:about_us' %}
+                                        {% else %}{% url 'profile' request.user.id %}{% endif %}">Profile</a>
                                 </li>
                                 <li><a class="dropdown-item bg-dark text-white" href="{% url 'logout' %}">Log Out</a>
                                 </li>

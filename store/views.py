@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
@@ -114,49 +115,52 @@ def cart_view(request):
 
 @login_required
 def checkout(request, pk):
-    cart = Cart(request)
-    about = About.objects.all().first()
-    categories = Category.objects.all()
-    profile = CustomerProfile.objects.get(user_id=pk)
+    try:
+        cart = Cart(request)
+        about = About.objects.all().first()
+        categories = Category.objects.all()
+        profile = CustomerProfile.objects.get(user_id=pk)
 
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
+        if request.method == 'POST':
+            form = OrderForm(request.POST)
 
-        if form.is_valid():
-            total_price = 0
+            if form.is_valid():
+                total_price = 0
 
-            for item in cart:
-                product = item['product']
-                # print(product.price)
-                # print(int(item['quantity']))
-                total_price += product.price * int(item['quantity'])
+                for item in cart:
+                    product = item['product']
+                    # print(product.price)
+                    # print(int(item['quantity']))
+                    total_price += product.price * int(item['quantity'])
 
-            order = form.save(commit=False)
-            order.created_by = request.user
-            order.paid_amount = total_price
-            order.save()
+                order = form.save(commit=False)
+                order.created_by = request.user
+                order.paid_amount = total_price
+                order.save()
 
-            for item in cart:
-                product = item['product']
-                quantity = int(item['quantity'])
-                price = product.price * quantity
+                for item in cart:
+                    product = item['product']
+                    quantity = int(item['quantity'])
+                    price = product.price * quantity
 
-                item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity,
-                                                created_by_id=request.user.id)
-            cart.clear()
+                    item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity,
+                                                    created_by_id=request.user.id)
+                cart.clear()
 
-        return redirect('frontpage')
-    else:
-        form = OrderForm()
+            return redirect('frontpage')
+        else:
+            form = OrderForm()
 
-    return render(request, 'store/checkout.html', {
-        'cart': cart,
-        'form': form,
-        'about': about,
-        'categories': categories,
-        'profile': profile,
+        return render(request, 'store/checkout.html', {
+            'cart': cart,
+            'form': form,
+            'about': about,
+            'categories': categories,
+            'profile': profile,
 
-    })
+        })
+    except:
+        return render(request, 'store/profile_form.html', )
 
 
 def search(request):
@@ -247,7 +251,7 @@ class ProductListView(ListView):
         return context
 
 
-class AddProfileView(CreateView):
+class AddProfileView(LoginRequiredMixin, CreateView):
     template_name = "store/profile_form.html"
     form_class = ProfileForm
     model = CustomerProfile
@@ -268,7 +272,7 @@ class AddProfileView(CreateView):
         return reverse_lazy('profile', kwargs={'pk': self.request.user.id})
 
 
-class ProfileView(DetailView):
+class ProfileView(LoginRequiredMixin, DetailView):
     template_name = "store/profile.html"
 
     def get_context_data(self, **kwargs):
@@ -282,7 +286,7 @@ class ProfileView(DetailView):
         return EcommerceUser.objects.filter(id=self.kwargs.get('pk'))
 
 
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoginRequiredMixin, UpdateView):
     template_name = "store/update_profile_form.html"
     fields = ['first_name', 'last_name', 'address', 'mobileNo', 'photo', 'user']
     model = CustomerProfile
