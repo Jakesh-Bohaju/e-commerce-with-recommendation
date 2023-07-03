@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 # from django.contrib.auth.forms import UserCreationForm
 # from django.contrib.auth.models import User
 from django.utils.text import slugify
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from .models import *
 
@@ -232,7 +232,6 @@ class VendorRequiredMixin(UserPassesTestMixin):
 
 
 class SellerProfileView(LoginRequiredMixin, VendorRequiredMixin, CreateView):
-    # template_name = "forms/category_form.html"
     fields = ['company_name', 'company_address', 'company_phone', 'pan_vat_no',
               'company_registered_document', 'pan_vat_registered_document', 'vendor']
     model = VendorDetail
@@ -243,4 +242,22 @@ class SellerProfileView(LoginRequiredMixin, VendorRequiredMixin, CreateView):
         })
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('seller', args=[self.kwargs['pk']])
+        return reverse_lazy('seller', kwargs={'pk': self.request.user.id})
+
+
+class SellerProfileUpdateView(LoginRequiredMixin, VendorRequiredMixin, UpdateView):
+    template_name = "userprofile/vendor_detail_update_form.html"
+    fields = ['company_address', 'company_phone', 'company_registered_document']
+
+    model = VendorDetail
+
+    def form_invalid(self, form):
+        return render(self.request, 'forms/category_form.html', {
+            'form': form,
+        })
+
+    def get_queryset(self):
+        return VendorDetail.objects.filter(id=self.kwargs.get('pk'))
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('seller', kwargs={'pk': self.request.user.id})

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from .views import SellerProfileView
+from .views import SellerProfileView, SellerProfileUpdateView
 
 # app_name = 'vendor'
 
@@ -15,4 +15,6 @@ urlpatterns = [
     path('<int:user_pk>/edit-product/<int:product_pk>/', views.edit_product, name='edit_product'),
     path('<int:user_pk>/delete-product/<int:product_pk>/', views.delete_product, name='delete_product'),
     path('<int:pk>/profile', views.vendor_detail, name='vendor_detail'),
+    path('<int:upk>/update-profile/<int:pk>', SellerProfileUpdateView.as_view(), name="seller_profile_update"),
+
 ]
