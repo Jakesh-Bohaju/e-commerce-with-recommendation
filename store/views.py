@@ -242,27 +242,32 @@ def product_detail(request, category_slug, slug):
         if request.method == 'POST':
             rating = request.POST.get('rating', 3)
             content = request.POST.get('content', '')
+            print("rating", rating, "content", content)
             if content:
-                reviews = Review.objects.filter(created_by=request.user, product=product)
-                if reviews.count() > 0:
-                    review = reviews.first()
-                    review.rating = rating
-                    review.content = content
-                    review.save()
-                else:
-                    review = Review.objects.create(
-                        product=product,
-                        rating=rating,
-                        content=content,
-                        created_by=request.user
-                    )
-
+                review = Review.objects.create(
+                    product=product,
+                    rating=rating,
+                    content=content,
+                    created_by=request.user
+                )
+                # reviews = Review.objects.filter(created_by=request.user, product=product)
+                # if reviews:
+                #     review = reviews.first()
+                #     review.rating = rating
+                #     review.content = content
+                #     review.save()
+                # else:
+                #     review = Review.objects.create(
+                #         product=product,
+                #         rating=rating,
+                #         content=content,
+                #         created_by=request.user
+                #     )
         review = Review.objects.filter(product_id=product.id)
         random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
         about = About.objects.all().first()
         con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
         if not hyb_pid == None:
-            hyb_pid = hyb_pid[1:6]
             recommended_products = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
         elif not coll_pid == None:
             recommended_products = Product.objects.filter(id__in=coll_pid[1:6], status='Active')

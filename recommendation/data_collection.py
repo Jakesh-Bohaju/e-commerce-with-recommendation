@@ -228,6 +228,7 @@ def data_collection(request):
 
 # load dataset for recommendation process
 def read_dataset(request):
+    data_collection(request)
     df_product = pd.read_json(os.path.abspath("recommendation/dataset/product.json"), lines=True)
     df_vendor = pd.read_json(os.path.abspath("recommendation/dataset/vendor.json"), lines=True)
     df_category = pd.read_json(os.path.abspath("recommendation/dataset/category.json"), lines=True)
