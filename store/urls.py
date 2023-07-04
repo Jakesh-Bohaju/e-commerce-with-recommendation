@@ -1,11 +1,14 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import ProductListView, AddProfileView, ProfileView, UpdateProfileView
+from .views import ProductListView, AddProfileView, ProfileView, UpdateProfileView, ResetPasswordView
 
 urlpatterns = [
     path('login', views.handlelogin, name='login'),
     path('signup', views.handlesignup, name='signup'),
+    path('otp-verify', views.otp_verify, name='otp verification'),
+    path('reset-password', ResetPasswordView.as_view(), name='reset_password'),
+
     path("logout/", LogoutView.as_view(), name="logout"),
     path('search', views.search, name='search'),
     path('add-to-cart/<int:product_id>', views.add_to_cart, name='add_to_cart'),

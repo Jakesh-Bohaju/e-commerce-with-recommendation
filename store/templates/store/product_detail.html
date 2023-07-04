@@ -95,6 +95,11 @@
                                            href="#product-review-tab" role="tab" aria-controls="product-review-tab"
                                            aria-selected="false">Reviews ({{ reviews.count }})</a>
                                     </li>
+                                    {#                                    <li class="nav-item">#}
+                                    {#                                        <a class="nav-link" id="product-review-link" data-toggle="tab"#}
+                                    {#                                           href="#product-review-tab" role="tab" aria-controls="product-review-tab"#}
+                                    {#                                           aria-selected="false">Reviews</a>#}
+                                    {#                                    </li>#}
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel"
@@ -107,29 +112,66 @@
 
                                     <div class="tab-pane fade" id="product-review-tab" role="tabpanel"
                                          aria-labelledby="product-review-link">
-                                        <div class="reviews">
-                                            <h3>Reviews ({{ reviews.count }})</h3>
-                                            {% for review in reviews %}
-                                                <div class="review">
-                                                    <div class="row no-gutters">
-                                                        <div class="col-auto">
-                                                            <h4><a href="#">{{ review.created_by.username }}</a></h4>
-                                                            <div class="ratings-container">
-                                                                <div class="ratings">
-                                                                    <div class="ratings-val" style="width: 80%;"></div>
-                                                                    <!-- End .ratings-val -->
-                                                                </div><!-- End .ratings -->
-                                                            </div><!-- End .rating-container -->
-                                                            <span class="review-date">{{ review.created_at|date:"D d M Y" }}</span>
-                                                        </div><!-- End .col -->
-                                                        <div class="col">
-                                                            <div class="review-content">
-                                                                <p>{{ review.content }}</p>
-                                                            </div><!-- End .review-content -->
-                                                        </div><!-- End .col-auto -->
-                                                    </div><!-- End .row -->
-                                                </div><!-- End .review -->
-                                            {% endfor %}
+                                        <div class="reviews row">
+                                            <div class="row">
+                                                <h3>Write Reviews</h3>
+                                            </div>
+                                            <div class="row">
+                                                {% if request.user.is_authenticated %}
+                                                    <form method="post" action=".">
+                                                        {% csrf_token %}
+                                                        <div col-3>
+                                                            <label class="text-dark">Rating</label>
+                                                            <select name="rating">
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3" selected>3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-9">
+                                                            <label class="text-dark">Comment</label>
+                                                            <textarea name="content" rows="3" cols="110"></textarea>
+                                                        </div>
+                                                        <div>
+                                                            <button class="btn btn-primary">
+                                                                Submit
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="row pt-3">
+                                                <h3>Reviews ({{ reviews.count }})</h3>
+                                                <div><br>
+                                                    {% for review in reviews %}
+                                                        <div class="review">
+                                                            <div class="row no-gutters">
+                                                                <div class="col-auto">
+                                                                    <h4>
+                                                                        <a href="#">{{ review.created_by.username }}</a>
+                                                                    </h4>
+                                                                    <div class="ratings-container">
+                                                                        <div class="ratings">
+                                                                            <div class="ratings-val"
+                                                                                 style="width: 80%;"></div>
+                                                                            <!-- End .ratings-val -->
+                                                                        </div><!-- End .ratings -->
+                                                                    </div><!-- End .rating-container -->
+                                                                    <span class="review-date">{{ review.created_at|date:"D d M Y" }}</span>
+                                                                </div><!-- End .col -->
+                                                                <div class="col">
+                                                                    <div class="review-content">
+                                                                        <p>{{ review.content }}</p>
+                                                                    </div><!-- End .review-content -->
+                                                                </div><!-- End .col-auto -->
+                                                            </div><!-- End .row -->
+                                                        </div><!-- End .review -->
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
                                         </div><!-- End .reviews -->
                                     </div><!-- .End .tab-pane -->
                                 </div><!-- End .tab-content -->

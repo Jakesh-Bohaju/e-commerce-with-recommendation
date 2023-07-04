@@ -12,9 +12,10 @@ from django.views.generic import ListView, UpdateView, TemplateView, CreateView,
 from ecomadmin.models import About
 from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
+from .OTP import sendOTPToUserForSignUp
 from .cart import Cart
 from .forms import OrderForm, ProfileForm
-from .models import Category, Product, Order, OrderItem, Review, CustomerProfile
+from .models import Category, Product, Order, OrderItem, Review, CustomerProfile, UserOTP
 
 
 def handlelogin(request):
@@ -62,9 +63,40 @@ def handlesignup(request):
             pass
         myuser = EcommerceUser.objects.create_user(uname, email, password)
         myuser.save()
-        messages.success(request, 'Signup Successful.Please Log In')
-        return redirect('/login')
+        sendOTPToUserForSignUp(email=email)
+        messages.success(request, 'Please verify your otp')
+        return redirect('/otp-verify?value={}'.format(email))
     return render(request, 'registration/signup.html')
+
+
+def otp_verify(request):
+    if request.method == 'POST':
+        email = request.GET.get("value")
+        first = request.POST.get('first')
+        second = request.POST.get('second')
+        third = request.POST.get('third')
+        fourth = request.POST.get('fourth')
+        fifth = request.POST.get('fifth')
+        otp = first + second + third + fourth + fifth
+        query = UserOTP.objects.filter(email=email)
+        if query.exists():
+            obj = query.first()
+            if str(obj.otp) == str(otp):
+                # Update the status of user
+                user = EcommerceUser.objects.filter(email=email)
+                if user.exists():
+                    user = user.first()
+                    user.is_OTP_verified = True
+                    user.save()
+                    messages.success(request, "OTP verification successful")
+                    return redirect('/login')
+                else:
+                    messages.error(request, "User not found")
+            else:
+                messages.error(request, 'Couldn`t verrify your otp')
+    else:
+        messages.error(request, 'Couldn`t verrify your otp')
+    return render(request, 'auth/otp.html')
 
 
 @login_required
@@ -201,6 +233,7 @@ def category_detail(request, slug):
     except:
         pass
 
+
 def product_detail(request, category_slug, slug):
     try:
         product = get_object_or_404(Product, slug=slug, status=Product.ACTIVE)
@@ -332,3 +365,7 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk': self.request.user.id})
+
+
+class ResetPasswordView(TemplateView):
+    template_name = 'auth/forgetpassword.html'

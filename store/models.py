@@ -141,3 +141,11 @@ class CustomerProfile(models.Model):
     user = models.ForeignKey(EcommerceUser, related_name="customer_detail", on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(blank=True, auto_now=True)
+
+
+class UserOTP(models.Model):
+    email = models.TextField(null=True)
+    otp = models.IntegerField(null=True)
+    is_signup = models.BooleanField(default=False)
+    is_forgot_password = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now=True)

@@ -48,7 +48,12 @@
                                 <div>
                                     {% if profile %}<a type="button" class="btn btn-primary"
                                                        href="{% url 'update_profile' username=request.user.username pk=profile.id %}">Update
-                                        Profile</a>{% endif %}
+                                        Profile</a>
+                                    {% else %}
+                                        <a type="button" class="btn btn-primary"
+                                           href="{% url 'add_profile' request.user.id %}">Add
+                                            Profile</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -67,42 +72,44 @@
                     </div>
 
                     <hr>
-                    <div class="row" style="background-color: #e7efed">
-                        <div class="p-2">
-                            <h3>Order and Tracking Detail</h3>
-                        </div>
-                        <div class="p-3 table-responsive">
-                            <table style="border: 1px solid; width: 100%;  border-collapse: collapse; background-color:#e9ebef; text-align: center">
-                                <thead>
-                                <tr class="text-dark" style="border: 1px solid;">
-                                    <th>S.N</th>
-                                    <th>Product Name</th>
-                                    <th>Tracking</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Order Date</th>
-                                    <th>Image</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for order_item in order_items %}
-                                    <tr style="border: 1px solid; text-size-adjust: auto">
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ order_item.product.title }}</td>
-                                        <td>{{ order_item.tracking_status }}</td>
-                                        <td>{{ order_item.quantity }}</td>
-                                        <td>{{ order_item.price }}</td>
-                                        <td>{{ order_item.created_at|date:"D d M Y" }}</td>
-                                        <td><img alt="{{ order_item.product.title }}"
-                                                 src="{{ order_item.product.image.url }}"
-                                                 class="rounded mx-auto d-block"
-                                                 height="50" width="100"></td>
+                    {% if order_items %}
+                        <div class="row" style="background-color: #e7efed">
+                            <div class="p-2">
+                                <h3>Order and Tracking Detail</h3>
+                            </div>
+                            <div class="p-3 table-responsive">
+                                <table style="border: 1px solid; width: 100%;  border-collapse: collapse; background-color:#e9ebef; text-align: center">
+                                    <thead>
+                                    <tr class="text-dark" style="border: 1px solid;">
+                                        <th>S.N</th>
+                                        <th>Product Name</th>
+                                        <th>Tracking</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Order Date</th>
+                                        <th>Image</th>
                                     </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    {% for order_item in order_items %}
+                                        <tr style="border: 1px solid; text-size-adjust: auto">
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ order_item.product.title }}</td>
+                                            <td>{{ order_item.tracking_status }}</td>
+                                            <td>{{ order_item.quantity }}</td>
+                                            <td>{{ order_item.price }}</td>
+                                            <td>{{ order_item.created_at|date:"D d M Y" }}</td>
+                                            <td><img alt="{{ order_item.product.title }}"
+                                                     src="{{ order_item.product.image.url }}"
+                                                     class="rounded mx-auto d-block"
+                                                     height="50" width="100"></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </main>

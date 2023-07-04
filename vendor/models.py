@@ -4,6 +4,7 @@ from django.db import models
 
 class EcommerceUser(AbstractUser):
     is_vendor = models.BooleanField(default=False)
+    is_OTP_verified = models.BooleanField(default=False)
 
 
 class VendorDetail(models.Model):
