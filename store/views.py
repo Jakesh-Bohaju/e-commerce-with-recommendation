@@ -283,8 +283,8 @@ def product_detail(request, category_slug, slug):
             'categories': categories,
 
         })
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 class ProductListView(ListView):
