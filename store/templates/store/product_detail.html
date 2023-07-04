@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% load static %}
+{% load average_rating %}
 {% block frontend_content %}
     <div class="container-fluid pt-2">
 
@@ -43,10 +44,10 @@
 
                                             <div class="ratings-container">
                                                 <div class="ratings">
-                                                    <div class="ratings-val" style="width: 80%;"></div>
+                                                    <div class="ratings-val" style="width: {{ product|avg_rating }}%;"></div>
                                                     <!-- End .ratings-val -->
                                                 </div><!-- End .ratings -->
-                                                <a class="ratings-text" href="#product-review-link" id="review-link">( 2
+                                                <a class="ratings-text" href="" id="review-link">( {{ product|review_count }}
                                                     Reviews )</a>
                                             </div><!-- End .rating-container -->
 
@@ -233,10 +234,10 @@
                                             </div><!-- End .product-price -->
                                             <div class="ratings-container">
                                                 <div class="ratings">
-                                                    <div class="ratings-val" style="width: 20%;"></div>
+                                                    <div class="ratings-val" style="width: {{ product|avg_rating }}%;"></div>
                                                     <!-- End .ratings-val -->
                                                 </div><!-- End .ratings -->
-                                                <span class="ratings-text">( {{ reviews.count }} Reviews )</span>
+                                                <span class="ratings-text">( {{ product|review_count }} Reviews )</span>
                                             </div><!-- End .rating-container -->
 
                                         </div><!-- End .product-body -->

@@ -2,6 +2,7 @@
 
 {% block title %}{{ category.title }}{% endblock %}
 {% load static %}
+{% load average_rating %}
 {% block frontend_content %}
     <div class="container-fluid pt-2">
         <main class="main">
@@ -36,7 +37,7 @@
 
                                 <div class="product-body">
                                     <div class="product-cat">
-                                        <a href="#">Women</a>
+                                        <a href="{% url 'category_detail' product.category.slug %}">{{ product.category.title }}</a>
                                     </div><!-- End .product-cat -->
                                     <h3 class="product-title"><a
                                             href="{% url 'product_detail' product.category.slug product.slug %}">
@@ -47,9 +48,9 @@
                                     <!-- End .product-price -->
                                     <div class="ratings-container">
                                         <div class="ratings">
-                                            <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                            <div class="ratings-val" style="width: {{ product|avg_rating }}%;"></div><!-- End .ratings-val -->
                                         </div><!-- End .ratings -->
-                                        <span class="ratings-text">( 0 Reviews )</span>
+                                        <span class="ratings-text">( {{ product|review_count }} Reviews )</span>
                                     </div><!-- End .rating-container -->
 
 
