@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.views.generic import CreateView, UpdateView
 
+from store.OTP import sendOTPToUserForSignUp
 from .models import *
 
 from store.forms import ProductForm

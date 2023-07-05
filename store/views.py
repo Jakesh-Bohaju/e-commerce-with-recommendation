@@ -27,7 +27,7 @@ def handlelogin(request):
         uname = request.POST.get("username")
         pass1 = request.POST.get("pass1")
         myuser = authenticate(username=uname, password=pass1)
-        if myuser is not None and myuser.is_OTP_verified:
+        if (myuser is not None and myuser.is_OTP_verified) or (myuser is not None and myuser.is_superuser):
             login(request, myuser)
             messages.success(request, "Login Success")
             return redirect('/')
@@ -273,28 +273,32 @@ def product_detail(request, category_slug, slug):
                 #         content=content,
                 #         created_by=request.user
                 #     )
+        content = {}
         review = Review.objects.filter(product_id=product.id)
         random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
         about = About.objects.all().first()
-        con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
-        if not hyb_pid == None:
-            recommended_products = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
-        elif not coll_pid == None:
-            recommended_products = Product.objects.filter(id__in=coll_pid[1:6], status='Active')
-        else:
-            recommended_products = Product.objects.filter(id__in=con_pid[1:6], status='Active')
+        try:
+            con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
+            if not hyb_pid == None:
+                content['recommended_products'] = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
+            elif not coll_pid == None:
+                content['recommended_products'] = Product.objects.filter(id__in=coll_pid[1:6], status='Active')
+            else:
+                content['recommended_products'] = Product.objects.filter(id__in=con_pid[1:6], status='Active')
+        except:
+            pass
 
         return render(request, 'store/product_detail.html', {
             'product': product,
             'random_products': random_products,
             'reviews': review,
-            'recommended_products': recommended_products,
+            'recommended_products': content,
             'about': about,
             'categories': categories,
 
         })
     except Exception as e:
-        print("==================", e)
+        print(e)
 
 
 class ProductListView(ListView):

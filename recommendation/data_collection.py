@@ -273,7 +273,9 @@ def content_based_filtering(request, product_id):
         con_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'score'])
         return pid, con_recm_df
     except Exception as e:
-        print("+++++++++++++++++", e)
+        pid = None
+        con_recm_df = None
+        return pid, con_recm_df
 
 
 # Collaborative Based Filtering based on rating
@@ -290,8 +292,8 @@ def collaborative_based_filtering(request, product_id):
         relevant_columns = ['user_id', 'id', 'title', 'reviews', 'rating']
         df = df[relevant_columns]
         count_rating = (
-        df.groupby(by=['id'])['rating'].count().reset_index().rename(columns={'rating': 'rating_count'})[
-            ['id', 'rating_count']]
+            df.groupby(by=['id'])['rating'].count().reset_index().rename(columns={'rating': 'rating_count'})[
+                ['id', 'rating_count']]
         )
         df_new = pd.merge(df, count_rating, on="id", how="left").dropna()
         df_new = df_new.drop_duplicates(['user_id', 'id'])
