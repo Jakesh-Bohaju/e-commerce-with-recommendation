@@ -62,7 +62,9 @@ def handlesellersignup(request):
             is_vendor = True
         myuser = EcommerceUser.objects.create_user(uname, email, password, is_vendor=is_vendor)
         myuser.save()
-        return render(request, 'registration/login.html')
+        sendOTPToUserForSignUp(email=email)
+        messages.success(request, 'Please verify your otp')
+        return redirect('/otp-verify?value={}'.format(email))
     return render(request, 'registration/sellersignup.html')
 
 

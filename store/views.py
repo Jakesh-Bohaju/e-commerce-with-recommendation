@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import Q
@@ -26,12 +27,12 @@ def handlelogin(request):
         uname = request.POST.get("username")
         pass1 = request.POST.get("pass1")
         myuser = authenticate(username=uname, password=pass1)
-        if myuser is not None:
+        if myuser is not None and myuser.is_OTP_verified:
             login(request, myuser)
             messages.success(request, "Login Success")
             return redirect('/')
         else:
-            messages.error(request, "Invalid Credentials")
+            messages.error(request, "Invalid Credentials or OTP not verified yet!!!")
             return redirect('/login')
     return render(request, 'registration/login.html')
 
@@ -97,8 +98,8 @@ def otp_verify(request):
                         opt_status.save()
                         return redirect('/login')
                     else:
-                        return redirect('/change-password')
-
+                        # return redirect('/change-password')
+                        return render(request, 'auth/resetpassword.html', {'email': email})
                 else:
                     messages.error(request, "User not found")
             else:
@@ -293,7 +294,7 @@ def product_detail(request, category_slug, slug):
 
         })
     except Exception as e:
-        print("==================",e)
+        print("==================", e)
 
 
 class ProductListView(ListView):
@@ -386,7 +387,6 @@ class ResetPasswordView(TemplateView):
 
     def post(self, form):
         email = self.request.POST.get('email')
-        print(email)
         sendOTPToUserForForgotPassword(email=email)
         messages.success(self.request, 'Please verify your otp')
         return redirect('/otp-verify?value={}'.format(email))
@@ -397,7 +397,15 @@ class ChangePasswordView(TemplateView):
 
     def post(self, form):
         email = self.request.POST.get('email')
-        print(email)
-        sendOTPToUserForForgotPassword(email=email)
-        messages.success(self.request, 'Please verify your otp')
-        return redirect('/otp-verify?value={}'.format(email))
+        password = self.request.POST.get('password')
+        confirmpassword = self.request.POST.get('confirm_password')
+        if password != confirmpassword:
+            messages.warning(self.request, "Password is Incorrect")
+            return render(self.request, 'auth/forgetpassword.html')
+        else:
+            print("password", password)
+            print("hashed password", make_password(password))
+            user = EcommerceUser.objects.get(email=email)
+            user.password = make_password(password)
+            user.save()
+        return redirect('/login')
