@@ -239,70 +239,80 @@ def read_dataset(request):
 
 # Content based filtering
 def content_based_filtering(request, product_id):
-    df_product, df_vendor, df_category, df_user, df_review = read_dataset(request)
-    df_vendor = df_vendor.drop(columns=['password', 'last_login', 'is_superuser', 'first_name',
-                                        'last_name', 'email', 'is_staff', 'is_active',
-                                        'date_joined', 'is_vendor']).rename(columns={'id': 'user_id'})
-    df_category = df_category.drop(columns=['slug']).rename(columns={'id': 'category_id'})
-    df_product = df_product.drop(columns=['thumbnail', 'image'])
-    df = pd.merge(df_product, df_vendor, on="user_id", how="left").dropna()
-    df = pd.merge(df, df_category, on="category_id", how="left").dropna()
-    df['content'] = df['description'] + df['title_x'] + df['title_y'] + df['username']
-    relevant_columns = ['id', 'content', 'title_x']
-    df = df[relevant_columns]
+    try:
+        df_product, df_vendor, df_category, df_user, df_review = read_dataset(request)
+        df_vendor = df_vendor.drop(columns=['password', 'last_login', 'is_superuser', 'first_name',
+                                            'last_name', 'email', 'is_staff', 'is_active',
+                                            'date_joined', 'is_vendor']).rename(columns={'id': 'user_id'})
+        df_category = df_category.drop(columns=['slug']).rename(columns={'id': 'category_id'})
+        df_product = df_product.drop(columns=['thumbnail', 'image'])
+        df = pd.merge(df_product, df_vendor, on="user_id", how="left").dropna()
+        df = pd.merge(df, df_category, on="category_id", how="left").dropna()
+        df['content'] = df['description'] + df['title_x'] + df['title_y'] + df['username']
+        relevant_columns = ['id', 'content', 'title_x']
+        df = df[relevant_columns]
 
-    tfv = TfidfVectorizer(min_df=3, max_features=None,
-                          strip_accents='unicode', analyzer='word', token_pattern=r'\w{1,}',
-                          ngram_range=(1, 3),
-                          stop_words='english')
-    df['content'] = df['content'].fillna('')
-    tfv_matrix = tfv.fit_transform(df['content'])
-    sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
-    indices = pd.Series(df.index, index=df['id']).drop_duplicates()
+        tfv = TfidfVectorizer(min_df=3, max_features=None,
+                              strip_accents='unicode', analyzer='word', token_pattern=r'\w{1,}',
+                              ngram_range=(1, 3),
+                              stop_words='english')
+        df['content'] = df['content'].fillna('')
+        tfv_matrix = tfv.fit_transform(df['content'])
+        sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
+        indices = pd.Series(df.index, index=df['id']).drop_duplicates()
 
-    # def give_content_based_recommendation(product_id, sig=sig):
-    product_id = indices[product_id]
-    sig_scores = list(enumerate(sig[product_id]))
-    sig_scores = sorted(sig_scores, key=lambda x: x[1], reverse=True)
-    # sig_scores = sig_scores[:10]
-    content_score = [1 - i[1] for i in sig_scores]
-    product_indices = [i[0] for i in sig_scores]
-    pid = df['id'].iloc[product_indices].tolist()
-    data_tuples = list(zip(pid, content_score))
-    con_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'score'])
-    return pid, con_recm_df
+        # def give_content_based_recommendation(product_id, sig=sig):
+        product_id = indices[product_id]
+        sig_scores = list(enumerate(sig[product_id]))
+        sig_scores = sorted(sig_scores, key=lambda x: x[1], reverse=True)
+        # sig_scores = sig_scores[:10]
+        content_score = [1 - i[1] for i in sig_scores]
+        product_indices = [i[0] for i in sig_scores]
+        pid = df['id'].iloc[product_indices].tolist()
+        data_tuples = list(zip(pid, content_score))
+        con_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'score'])
+        return pid, con_recm_df
+    except Exception as e:
+        print("+++++++++++++++++", e)
 
 
 # Collaborative Based Filtering based on rating
 def collaborative_based_filtering(request, product_id):
-    df_product, df_vendor, df_category, df_user, df_review = read_dataset(request)
-    df_product = df_product.drop(
-        columns=['user_id', 'thumbnail', 'image', 'slug', 'price', 'description', 'status', 'category_id', ])
-    df_review = df_review.drop(columns=['id', 'created_at']).rename(
-        columns={'product_id': 'id', 'created_by_id': 'user_id'})
-    df = pd.merge(df_product, df_review, on="id", how="left").dropna()
-    df['reviews'] = df['content']
-    df = df.drop(['content'], axis=1)
-    relevant_columns = ['user_id', 'id', 'title', 'reviews', 'rating']
-    df = df[relevant_columns]
-    count_rating = (df.groupby(by=['id'])['rating'].count().reset_index().rename(columns={'rating': 'rating_count'})[
-        ['id', 'rating_count']]
-    )
-    df_new = pd.merge(df, count_rating, on="id", how="left").dropna()
-    df_new = df_new.drop_duplicates(['user_id', 'id'])
-    df_new_pvt = df_new.pivot(index='id', columns='user_id', values='rating').fillna(0)
-    df_new_pvt_matrix = csr_matrix(df_new_pvt.values)
-    model_knn = NearestNeighbors(metric='cosine', algorithm='brute')
-    model_knn.fit(df_new_pvt_matrix)
     try:
-        distances, indices = model_knn.kneighbors(df_new_pvt.iloc[product_id, :].values.reshape(1, -1), n_neighbors=10)
-        distance_value = distances[0]
-        pid_array = [i for i in indices]
-        pid = pid_array[0].tolist()
-        data_tuples = list(zip(pid, distance_value))
-        coll_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'distance'])
-        return pid, coll_recm_df
-    except:
+        df_product, df_vendor, df_category, df_user, df_review = read_dataset(request)
+        df_product = df_product.drop(
+            columns=['user_id', 'thumbnail', 'image', 'slug', 'price', 'description', 'status', 'category_id', ])
+        df_review = df_review.drop(columns=['id', 'created_at']).rename(
+            columns={'product_id': 'id', 'created_by_id': 'user_id'})
+        df = pd.merge(df_product, df_review, on="id", how="left").dropna()
+        df['reviews'] = df['content']
+        df = df.drop(['content'], axis=1)
+        relevant_columns = ['user_id', 'id', 'title', 'reviews', 'rating']
+        df = df[relevant_columns]
+        count_rating = (
+        df.groupby(by=['id'])['rating'].count().reset_index().rename(columns={'rating': 'rating_count'})[
+            ['id', 'rating_count']]
+        )
+        df_new = pd.merge(df, count_rating, on="id", how="left").dropna()
+        df_new = df_new.drop_duplicates(['user_id', 'id'])
+        df_new_pvt = df_new.pivot(index='id', columns='user_id', values='rating').fillna(0)
+        df_new_pvt_matrix = csr_matrix(df_new_pvt.values)
+        model_knn = NearestNeighbors(metric='cosine', algorithm='brute')
+        model_knn.fit(df_new_pvt_matrix)
+        try:
+            distances, indices = model_knn.kneighbors(df_new_pvt.iloc[product_id, :].values.reshape(1, -1),
+                                                      n_neighbors=10)
+            distance_value = distances[0]
+            pid_array = [i for i in indices]
+            pid = pid_array[0].tolist()
+            data_tuples = list(zip(pid, distance_value))
+            coll_recm_df = pd.DataFrame(data_tuples, columns=['product_id', 'distance'])
+            return pid, coll_recm_df
+        except:
+            pid = None
+            coll_recm_df = None
+            return pid, coll_recm_df
+    except Exception as e:
         pid = None
         coll_recm_df = None
         return pid, coll_recm_df

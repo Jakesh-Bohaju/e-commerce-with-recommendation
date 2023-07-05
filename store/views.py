@@ -293,7 +293,7 @@ def product_detail(request, category_slug, slug):
 
         })
     except Exception as e:
-        print(e)
+        print("==================",e)
 
 
 class ProductListView(ListView):
