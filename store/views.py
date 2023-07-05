@@ -12,7 +12,7 @@ from django.views.generic import ListView, UpdateView, TemplateView, CreateView,
 from ecomadmin.models import About
 from recommendation.data_collection import hybrid_recommendation
 from vendor.models import EcommerceUser
-from .OTP import sendOTPToUserForSignUp
+from .OTP import sendOTPToUserForSignUp, sendOTPToUserForForgotPassword
 from .cart import Cart
 from .forms import OrderForm, ProfileForm
 from .models import Category, Product, Order, OrderItem, Review, CustomerProfile, UserOTP
@@ -80,22 +80,31 @@ def otp_verify(request):
         otp = first + second + third + fourth + fifth
         query = UserOTP.objects.filter(email=email)
         if query.exists():
-            obj = query.first()
+            obj = query.get(is_active=True)
             if str(obj.otp) == str(otp):
                 # Update the status of user
-                user = EcommerceUser.objects.filter(email=email)
-                if user.exists():
-                    user = user.first()
+                user = EcommerceUser.objects.get(email=email)
+                opt_status = UserOTP.objects.get(email=user.email, is_active=True)
+                if user:
+                    # user = user.first()
                     user.is_OTP_verified = True
                     user.save()
+                    opt_status.is_active = False
+                    opt_status.save()
                     messages.success(request, "OTP verification successful")
-                    return redirect('/login')
+                    if opt_status.is_signup:
+                        opt_status.is_active = False
+                        opt_status.save()
+                        return redirect('/login')
+                    else:
+                        return redirect('/change-password')
+
                 else:
                     messages.error(request, "User not found")
             else:
                 messages.error(request, 'Couldn`t verrify your otp')
     else:
-        messages.error(request, 'Couldn`t verrify your otp')
+        messages.error(request, 'something wrong')
     return render(request, 'auth/otp.html')
 
 
@@ -374,3 +383,21 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
 class ResetPasswordView(TemplateView):
     template_name = 'auth/forgetpassword.html'
+
+    def post(self, form):
+        email = self.request.POST.get('email')
+        print(email)
+        sendOTPToUserForForgotPassword(email=email)
+        messages.success(self.request, 'Please verify your otp')
+        return redirect('/otp-verify?value={}'.format(email))
+
+
+class ChangePasswordView(TemplateView):
+    template_name = 'auth/resetpassword.html'
+
+    def post(self, form):
+        email = self.request.POST.get('email')
+        print(email)
+        sendOTPToUserForForgotPassword(email=email)
+        messages.success(self.request, 'Please verify your otp')
+        return redirect('/otp-verify?value={}'.format(email))

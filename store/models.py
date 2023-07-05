@@ -148,4 +148,5 @@ class UserOTP(models.Model):
     otp = models.IntegerField(null=True)
     is_signup = models.BooleanField(default=False)
     is_forgot_password = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now=True)

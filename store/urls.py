@@ -1,13 +1,15 @@
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import ProductListView, AddProfileView, ProfileView, UpdateProfileView, ResetPasswordView
+from .views import ProductListView, AddProfileView, ProfileView, UpdateProfileView, ResetPasswordView, \
+    ChangePasswordView
 
 urlpatterns = [
     path('login', views.handlelogin, name='login'),
     path('signup', views.handlesignup, name='signup'),
     path('otp-verify', views.otp_verify, name='otp verification'),
     path('reset-password', ResetPasswordView.as_view(), name='reset_password'),
+    path('change-password', ChangePasswordView.as_view(), name='change_password'),
 
     path("logout/", LogoutView.as_view(), name="logout"),
     path('search', views.search, name='search'),
