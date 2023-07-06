@@ -85,7 +85,7 @@ def otp_verify(request):
             if str(obj.otp) == str(otp):
                 # Update the status of user
                 user = EcommerceUser.objects.get(email=email)
-                opt_status = UserOTP.objects.get(email=user.email, is_active=True)
+                opt_status = UserOTP.objects.filter(email=user.email, is_active=True).last()
                 if user:
                     # user = user.first()
                     user.is_OTP_verified = True
