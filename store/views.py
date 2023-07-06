@@ -278,6 +278,7 @@ def product_detail(request, category_slug, slug):
         random_products = Product.objects.filter(category_id=product.category.id, status='Active').order_by('-id')
         about = About.objects.all().first()
         try:
+            print("==============")
             con_pid, coll_pid, hyb_pid = hybrid_recommendation(request, product.id)
             if not hyb_pid == None:
                 content['recommended_products'] = Product.objects.filter(id__in=hyb_pid[1:6], status='Active')
@@ -288,17 +289,18 @@ def product_detail(request, category_slug, slug):
         except:
             pass
 
+        print("Outside After recommendation", content)
         return render(request, 'store/product_detail.html', {
             'product': product,
             'random_products': random_products,
             'reviews': review,
-            'recommended_products': content,
+            'recommended_products': content['recommended_products'],
             'about': about,
             'categories': categories,
 
         })
     except Exception as e:
-        print(e)
+        print("Exception", e)
 
 
 class ProductListView(ListView):

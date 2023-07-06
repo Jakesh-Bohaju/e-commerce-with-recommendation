@@ -13,6 +13,7 @@ def frontpage(request):
         about = About.objects.all().first()
         popular_products = recommend_popularity_based(request)
         popular_products = popular_products.filter(status="Active")
+        print(popular_products)
         return render(request, 'core/index.html', {
             'products': products,
             'popular_products': popular_products,
