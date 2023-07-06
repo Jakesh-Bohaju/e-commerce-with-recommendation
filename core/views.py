@@ -12,6 +12,7 @@ def frontpage(request):
         banners = Banner.objects.all().order_by('-weight')[:6]
         about = About.objects.all().first()
         popular_products = recommend_popularity_based(request)
+        popular_products = popular_products.filter(status="Active")
         return render(request, 'core/index.html', {
             'products': products,
             'popular_products': popular_products,
