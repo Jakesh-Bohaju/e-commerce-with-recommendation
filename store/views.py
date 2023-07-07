@@ -469,7 +469,7 @@ def verify_payment(request):
         amount = float(amount) / 100
         order = Order(first_name=first_name, last_name=last_name, address=address, zipcode=zipcode, city=city,
                       mobile_no=mobile_no, total_cost=amount, paid_amount=amount, merchant_id=user_id,
-                      created_by_id=user_id)
+                      created_by_id=user_id, is_paid=True)
         order.save()
         cart = Cart(request)
         about = About.objects.all().first()
