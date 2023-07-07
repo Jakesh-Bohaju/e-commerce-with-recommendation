@@ -156,10 +156,13 @@
                                                 </tr>
                                             </table>
                                         </div>
+
                                         <div>
-                                            <a href="{% url 'checkout' request.user.id %}"
-                                               class="btn btn-outline-primary-2 btn-order btn-block text-dark">PROCEED
-                                                TO CHECKOUT</a>
+                                                                                        <a href="{% url 'checkout' request.user.id %}"
+                                                                                           class="btn btn-outline-primary-2 btn-order btn-block text-dark">PROCEED
+                                                                                            TO CHECKOUT</a>
+
+
                                         </div>
                                     </div><!-- End .summary -->
                                 </aside><!-- End .col-lg-3 -->
@@ -172,4 +175,6 @@
             {% endif %}
         </main><!-- End .main -->
     </div>
+
 {% endblock %}
+

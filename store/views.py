@@ -1,3 +1,8 @@
+import json
+
+from django.contrib.sites import requests
+from django.http import JsonResponse
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,6 +13,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, UpdateView, TemplateView, CreateView, DetailView
 
 from ecomadmin.models import About
@@ -176,10 +182,12 @@ def checkout(request, pk):
                     product = item['product']
                     # print(product.price)
                     # print(int(item['quantity']))
-                    total_price += product.price * int(item['quantity'])
+                    total_price += product.price * int(item['quantity']) + 100
 
                 order = form.save(commit=False)
                 order.created_by = request.user
+                order.merchant_id = request.user.id
+                order.total_cost = total_price
                 order.paid_amount = total_price
                 order.save()
 
@@ -415,3 +423,39 @@ class ChangePasswordView(TemplateView):
             user.password = make_password(password)
             user.save()
         return redirect('/login')
+
+
+@csrf_exempt
+def verify_payment(request):
+    print("start")
+    data = request.POST
+    product_id = data['product_identity']
+    token = data['token']
+    amount = data['amount']
+
+    url = "https://khalti.com/api/v2/payment/verify/"
+    payload = {
+        "token": token,
+        "amount": amount
+    }
+    headers = {
+        "Authorization": "Key test_secret_key_3e92a0534adb416c89518776e306ebc4"
+    }
+
+    response = requests.post(url, payload, headers=headers)
+    print("=============", response)
+
+    response_data = json.loads(response.text)
+    status_code = str(response.status_code)
+
+    if status_code == '400':
+        response = JsonResponse({'status': 'false', 'message': response_data['detail']}, status=500)
+        return response
+
+    # import pprint
+    # pp = pprint.PrettyPrinter(indent=4)
+    # pp.pprint(response_data)
+    print("verified payment")
+
+    # return redirect('/login')
+    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False)

@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 from . import views
 from .views import ProductListView, AddProfileView, ProfileView, UpdateProfileView, ResetPasswordView, \
-    ChangePasswordView
+    ChangePasswordView, verify_payment
 
 urlpatterns = [
     path('login', views.handlelogin, name='login'),
@@ -24,5 +24,8 @@ urlpatterns = [
     path('add-profile/<int:pk>', AddProfileView.as_view(), name='add_profile'),
     path('profile/<int:pk>', ProfileView.as_view(), name='profile'),
     path('update-profile/<str:username>/<int:pk>', UpdateProfileView.as_view(), name='update_profile'),
+
+    path('api/verify_payment',verify_payment,name='verify_payment'),
+
 
 ]
