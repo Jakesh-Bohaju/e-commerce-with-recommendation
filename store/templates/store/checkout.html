@@ -110,6 +110,11 @@
       <script>
         function verifyPayment(payload) {
             console.log("in the js function")
+            console.log("data payload",payload)
+
+            {#data = [payload,arr]#}
+            {#console.log("array data", data)#}
+
             $.ajax({
                 url: "{% url 'verify_payment' %}",
                 type: "POST",
@@ -144,6 +149,21 @@
                 onSuccess(payload) {
                     // hit merchant api for initiating verfication
                     console.log(payload);
+
+                    var first_name = $("#firstName").val()
+                    var last_name = $("#lastName").val()
+                    var address = $("#address").val()
+                    var mobile_no = $("#mobileNo").val()
+                    var zip_code = $("#zipCode").val()
+                    var city = $("#city").val()
+                    payload["first_name"] =first_name;
+                    payload["last_name"] =last_name;
+                    payload["address"] =address;
+                    payload["mobile_no"] =mobile_no;
+                    payload["zip_code"] =zip_code;
+                    payload["city"] =city;
+                    payload["total_amount"] = parseInt({{ cart.get_total_cost|add:100 }}) *100;
+                    payload["user_id"] = {{ request.user.id }};
                     verifyPayment(payload)
                 },
                 onError(error) {
@@ -159,7 +179,8 @@
         var btn = document.getElementById("payment-button");
         btn.onclick = function () {
             // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({amount: 1000});
+            {#let amount =parseInt({{ cart.get_total_cost|add:100 }})*100;#}
+            checkout.show({'amount': 10000});
         }
     </script>
 {% endblock %}
