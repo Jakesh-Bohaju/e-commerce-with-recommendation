@@ -427,67 +427,71 @@ class ChangePasswordView(TemplateView):
 
 @csrf_exempt
 def verify_payment(request):
-    print("start")
-    data = request.POST
-    print(data)
-    # product_id = data['product_identity']
-    token = data['token']
-    amount = data['total_amount']
-    first_name = data['first_name']
-    last_name = data['last_name']
-    address = data['address']
-    mobile_no = data['mobile_no']
-    zipcode = data['zip_code']
-    city = data['city']
-    user_id = data['user_id']
+    try:
+        print("start")
+        data = request.POST
+        print(data)
+        # product_id = data['product_identity']
+        token = data['token']
+        amount = data['total_amount']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        address = data['address']
+        mobile_no = data['mobile_no']
+        zipcode = data['zip_code']
+        city = data['city']
+        user_id = data['user_id']
 
-    print("khalti data :", token)
-    print("site data :", amount, first_name, last_name, address, mobile_no, zipcode, city, user_id)
-    url = "https://khalti.com/api/v2/payment/verify/"
-    payload = {
-        "token": token,
-        "amount": amount
-    }
-    headers = {
-        "Authorization": "Key test_secret_key_3e92a0534adb416c89518776e306ebc4"
-    }
+        print("khalti data :", token)
+        print("site data :", amount, first_name, last_name, address, mobile_no, zipcode, city, user_id)
+        url = "https://khalti.com/api/v2/payment/verify/"
+        payload = {
+            "token": token,
+            "amount": amount
+        }
+        headers = {
+            "Authorization": "Key test_secret_key_3e92a0534adb416c89518776e306ebc4"
+        }
 
-    # response = request.post(url, payload, headers=headers)
-    # print("=============", response)
-    #
-    # response_data = json.loads(response.text)
-    # status_code = str(response.status_code)
-    #
-    # if status_code == '400':
-    #     response = JsonResponse({'status': 'false', 'message': response_data['detail']}, status=500)
-    #     return response
+        # response = request.post(url, payload, headers=headers)
+        # print("=============", response)
+        #
+        # response_data = json.loads(response.text)
+        # status_code = str(response.status_code)
+        #
+        # if status_code == '400':
+        #     response = JsonResponse({'status': 'false', 'message': response_data['detail']}, status=500)
+        #     return response
 
-    # import pprint
-    # pp = pprint.PrettyPrinter(indent=4)
-    # pp.pprint(response_data)
-    amount = float(amount) / 100
-    order = Order(first_name=first_name, last_name=last_name, address=address, zipcode=zipcode, city=city,
-                  mobile_no=mobile_no, total_cost=amount, paid_amount=amount, merchant_id=user_id,
-                  created_by_id=user_id)
-    order.save()
-    cart = Cart(request)
-    about = About.objects.all().first()
-    categories = Category.objects.all()
-    profile = CustomerProfile.objects.get(user_id=user_id)
-    for item in cart:
-        product = item['product']
-        quantity = int(item['quantity'])
-        price = product.price * quantity
+        # import pprint
+        # pp = pprint.PrettyPrinter(indent=4)
+        # pp.pprint(response_data)
+        amount = float(amount) / 100
+        order = Order(first_name=first_name, last_name=last_name, address=address, zipcode=zipcode, city=city,
+                      mobile_no=mobile_no, total_cost=amount, paid_amount=amount, merchant_id=user_id,
+                      created_by_id=user_id)
+        order.save()
+        cart = Cart(request)
+        about = About.objects.all().first()
+        categories = Category.objects.all()
+        profile = CustomerProfile.objects.get(user_id=user_id)
+        for item in cart:
+            product = item['product']
+            quantity = int(item['quantity'])
+            price = product.price * quantity
 
-        item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity,
-                                        created_by_id=request.user.id)
-    cart.clear()
-    print("verified payment")
+            item = OrderItem.objects.create(order=order, product=product, price=price, quantity=quantity,
+                                            created_by_id=request.user.id)
+        cart.clear()
+        print("verified payment")
 
-    return render(request, 'store/checkout.html', {
-        'cart': cart,
-        'about': about,
-        'categories': categories,
-        'profile': profile,
+        return render(request, 'store/checkout.html', {
+            'cart': cart,
+            'about': about,
+            'categories': categories,
+            'profile': profile,
 
-    })    # return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False)
+        })  # return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False)
+
+    except Exception as e:
+        print("Verification not success", e)
