@@ -485,11 +485,12 @@ def verify_payment(request):
         cart.clear()
         print("verified payment")
 
-        return render(request, 'store/checkout.html', {
+        return render(request, 'store/product_list.html', {
             'cart': cart,
             'about': about,
             'categories': categories,
             'profile': profile,
+            'products': Product.objects.filter(status='Active')
 
         })  # return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}", safe=False)
 

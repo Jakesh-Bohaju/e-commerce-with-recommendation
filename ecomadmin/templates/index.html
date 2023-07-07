@@ -1,60 +1,110 @@
 {% extends '_dashboard.html' %}
 {% load static %}
 {% block dashboard_content %}
+    {#    <script>#}
+    {#        window.onload = function () {#}
+    {#            var chart = new CanvasJS.Chart("chartContainer", {#}
+    {#                theme: "light2",#}
+    {#                animationEnabled: true,#}
+    {#                exportEnabled: true,#}
+    {#                title: {#}
+    {#                    text: "Verified & Un-verified \u2800Vendors",#}
+    {#                    dockInsidePlotArea: true,#}
+    {#                    verticalAlign: "center",#}
+    {#                    maxWidth: 140,#}
+    {#                    fontSize: 18#}
+    {#                },#}
+    {#                data: [{#}
+    {#                    type: "doughnut",#}
+    {#                    indexLabel: "{label} - {y}",#}
+    {#                    yValueFormatString: "#,##0.0\"%\"",#}
+    {#                    startAngle: 0,#}
+    {#                    dataPoints: {{ vendor_data|safe }}#}
+    {#                }]#}
+    {#            });#}
+    {##}
+    {#            var barchart = new CanvasJS.Chart("barchartContainer", {#}
+    {#                theme: "light2",#}
+    {#                animationEnabled: true,#}
+    {#                exportEnabled: true,#}
+    {#                title: {#}
+    {#                    text: "Transaction Overview"#}
+    {#                },#}
+    {#                subtitles: [{#}
+    {#                    text: "Top 10 Vendors Transaction (in Nepalese Rupee)"#}
+    {#                }],#}
+    {#                axisY2: [{#}
+    {#suffix: " ¢/kWh",#}
+    {#prefix: "Rs. ",#}
+    {#                    labelAngle: 0,#}
+    {#                    labelMaxWidth: 150,#}
+    {#                    lineThickness: 1#}
+    {#                }],#}
+    {#                axisX: {#}
+    {#                    reversed: true,#}
+    {#                    labelAutoFit : true#}
+    {#                },#}
+    {#                data: [{#}
+    {#                    type: "bar",#}
+    {#                    yValueFormatString: "#.00",#}
+    {#                    axisYType: "secondary",#}
+    {#                    dataPoints: {{ top_10_vendor_transaction_data|safe }}#}
+    {#                }]#}
+    {#            });#}
+    {#            chart.render();#}
+    {#            barchart.render();#}
+    {#        }#}
+    {#    </script>#}
+
+    <script src="https://cdn.canvasjs.com/ga/canvasjs.min.js"></script>
     <script>
         window.onload = function () {
             var chart = new CanvasJS.Chart("chartContainer", {
                 theme: "light2",
                 animationEnabled: true,
-                exportEnabled: true,
                 title: {
-                    text: "Verified & Un-verified \u2800Vendors",
-                    dockInsidePlotArea: true,
-                    verticalAlign: "center",
-                    maxWidth: 140,
-                    fontSize: 18
+                    text: "Verified & Un-verified Vendors"
                 },
                 data: [{
-                    type: "doughnut",
-                    indexLabel: "{label} - {y}",
-                    yValueFormatString: "#,##0.0\"%\"",
-                    startAngle: 0,
+                    type: "pie",
+                    startAngle: -90,
+                    yValueFormatString: "#,###'%'",
                     dataPoints: {{ vendor_data|safe }}
                 }]
             });
+            chart.render();
 
-            var barchart = new CanvasJS.Chart("barchartContainer", {
-                theme: "light2",
+
+            var chart = new CanvasJS.Chart("barchartContainer", {
                 animationEnabled: true,
                 exportEnabled: true,
                 title: {
-                    text: "Transaction Overview"
+                    text: "Transaction Overview",
+                    fontFamily: "Verdana, sans-serif"
                 },
                 subtitles: [{
-                    text: "Top 10 Vendors Transaction (in Nepalese Rupee)"
+                    text: "Top 10 Vendors Transaction (in Nepalese Rupee)",
+                    fontFamily: "Verdana, sans-serif"
                 }],
-                axisY2: [{
-                    {#suffix: " ¢/kWh",#}
-                    {#prefix: "Rs. ",#}
-                    labelAngle: 0,
-                    labelMaxWidth: 150,
-                    lineThickness: 1
-                }],
+                axisY: {
+                    title: "Total Earning",
+                    suffix: ""
+                },
                 axisX: {
-                    reversed: true,
-                    labelAutoFit : true
+                    title: "Company Name",
+                    labelAngle: 0,
+                    labelTextAlign: "center"
                 },
                 data: [{
-                    type: "bar",
-                    yValueFormatString: "#.00",
-                    axisYType: "secondary",
+                    type: "column",
+                    yValueFormatString: "#,##0",
                     dataPoints: {{ top_10_vendor_transaction_data|safe }}
                 }]
             });
             chart.render();
-            barchart.render();
         }
     </script>
+
 
     <div class="container-fluid">
         <!-- Page Heading -->
@@ -173,7 +223,9 @@
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                            <div><canvas id="barchartContainer" style="width: 100%; height: 360px;"></canvas></div>
+
+                        <div id="barchartContainer" style="width: 100%; height: 360px;"></div>
+
                     </div>
                 </div>
             </div>
@@ -189,7 +241,8 @@
                     <!-- Card Body -->
                     <div class="card-body">
 
-                        <div><canvas id="chartContainer" style="width: 100%; height: 360px;"></canvas></div>
+
+                        <div id="chartContainer" style="width: 100%; height: 360px;"></div>
 
 
                         {#                        <div class="chart-pie pt-4 pb-2">#}

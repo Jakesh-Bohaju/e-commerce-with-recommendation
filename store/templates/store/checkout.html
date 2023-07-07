@@ -17,7 +17,7 @@
 
             <div class="page-content">
                 <div class="checkout">
-                    <div class="container">
+                    <div class="container" id="successpayment">
                         {% if profile %}
 {#                            <form method="post" action="" class="space-y-5">#}
 {#                                {% csrf_token %}#}
@@ -122,7 +122,7 @@
                 dataType: 'json',
                 success: function (response) {
                     alert(response)
-                    window.location.href = '/';
+                    window.location.href = '/products';
                 },
                 error: function (error) {
                     alert(error.responseJSON['message'])

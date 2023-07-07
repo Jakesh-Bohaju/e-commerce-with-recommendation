@@ -45,8 +45,8 @@ class AdminView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
 
             # for Doughnut Charts
             vendor_data = [
-                {"label": "Verified", "symbol": "O", "y": verified_vendor_percent},
-                {"label": "Un-Verified", "symbol": "Si", "y": un_verified_vendor_percent},
+                {"label": "Verified", "y": verified_vendor_percent},
+                {"label": "Un-Verified", "y": un_verified_vendor_percent},
             ]
 
             # For Bar Chart
@@ -64,12 +64,12 @@ class AdminView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
             top_10_transaction_dict = dict(
                 itertools.islice(
                     dict(sorted(top_10_transaction_dict.items(), key=operator.itemgetter(1), reverse=True)).items(),
-                    10))
-            print(top_10_transaction_dict)
+                    5))
+            print("===================",vendor_data)
             final_top_10_vendor_transaction_data = []
             for key, value in top_10_transaction_dict.items():
-                final_top_10_vendor_transaction_data.append({"y": value, "label": key})
-
+                final_top_10_vendor_transaction_data.append({"label": key, "y": value})
+            print("_______________",final_top_10_vendor_transaction_data)
             context['vendor_data'] = vendor_data
             context['top_10_vendor_transaction_data'] = final_top_10_vendor_transaction_data
         except Exception as e:
