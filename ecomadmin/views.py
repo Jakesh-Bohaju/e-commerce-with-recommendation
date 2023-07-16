@@ -11,6 +11,7 @@ from django.views.generic import CreateView, TemplateView, ListView, DeleteView,
 from ecomadmin.forms import CategoryForm, BannerForm, AboutForm
 from ecomadmin.models import Banner, About
 from recommendation.data_collection import *
+from recommendation.evaluation import kkk
 from store.models import Category, Product, Order, OrderItem, Review
 from vendor.models import VendorDetail, EcommerceUser
 import operator
@@ -72,6 +73,7 @@ class AdminView(LoginRequiredMixin, AdminRequiredMixin, TemplateView):
             print("_______________",final_top_10_vendor_transaction_data)
             context['vendor_data'] = vendor_data
             context['top_10_vendor_transaction_data'] = final_top_10_vendor_transaction_data
+            context['cs'] = kkk()
         except Exception as e:
             pass
         return context

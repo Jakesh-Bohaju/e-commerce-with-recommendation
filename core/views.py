@@ -2,10 +2,12 @@ from django.shortcuts import render
 
 from ecomadmin.models import Banner, About
 from recommendation.data_collection import recommend_popularity_based
+from recommendation.evaluation import kkk
 from store.models import Product, Category
 
 
 def frontpage(request):
+    # recomevaltry()
     try:
         products = Product.objects.filter(status=Product.ACTIVE).order_by('?')[:16]
         categories = Category.objects.all()
