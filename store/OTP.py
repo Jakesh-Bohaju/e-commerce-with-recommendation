@@ -4,11 +4,11 @@ from email.mime.text import MIMEText
 from random import randint, randrange
 from .models import UserOTP
 
-sender_email = 'uvthemonster147@gmail.com'
+sender_email = '*************************'
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 smtp_username = sender_email
-smtp_password = 'ugpveoccoqjjbqfn'
+smtp_password = '***********************'
 
 
 def sendOTPToUserForSignUp(email):
